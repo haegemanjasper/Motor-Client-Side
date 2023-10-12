@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  justify-content: center;
+  background-color: #f0f0f0; /* Achtergrondkleur van de hele site */
+  padding: 20px;
+}
+
+.Motor {
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  margin: 10px;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  font-family: "Arial", sans-serif;
+  letter-spacing: 1px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  p:first-child {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}

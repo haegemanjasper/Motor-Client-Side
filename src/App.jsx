@@ -1,16 +1,20 @@
-import MotorItem from "./components/motors/MotorItem";
-import { MOTOR_DATA } from "./api/mock_data";
-import PlacesList from "./components/places/PlacesList";
+import React from "react";
+import MotorDetail from "../src/components/motors/MotorDetails.jsx";
+import { MOTOR_DATA } from "../src/api/mock_data.js";
+import "./App.css";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
+    <div className="container">
       {MOTOR_DATA.map((motor) => (
-        <MotorItem {...motor} />
+        <MotorDetail
+          key={motor.id}
+          id={motor.id}
+          price={motor.price}
+          name={motor.name}
+          available={motor.available}
+        />
       ))}
-      <PlacesList />
     </div>
   );
 }
-
-export default App;
