@@ -1,13 +1,14 @@
-import Transaction from "./components/transactions/Transaction";
-import MOTOR_DATA from "./api/mock_data";
+import MotorItem from "./components/motors/MotorItem";
+import { MOTOR_DATA } from "./api/mock_data";
+import PlacesList from "./components/places/PlacesList";
 
 function App() {
-  //const motor = MOTOR_DATA[0];
   return (
     <div className="App">
       {MOTOR_DATA.map((motor) => (
-        <Transaction {...motor} />
+        <MotorItem {...motor} />
       ))}
+      <PlacesList />
     </div>
   );
 }

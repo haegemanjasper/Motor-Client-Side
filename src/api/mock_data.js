@@ -44,3 +44,7 @@ const MOTOR_DATA = [
         available: true,
       },
   ];
+
+  const RENTAL_LOCATION = 'MotorShop NV';
+
+    export { MOTOR_DATA, RENTAL_LOCATION };

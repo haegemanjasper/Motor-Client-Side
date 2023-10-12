@@ -1,9 +1,9 @@
-export default function Transaction(props) {
+export default function MotorItem(props) {
   const { name, price, available } = props;
   const status = available ? "beschikbaar" : "niet beschikbaar";
 
   return (
-    <div>
+    <div className="text-bg-dark" style={{ textAlign: "center" }}>
       <p>
         <strong>Motor:</strong> {name}
       </p>
@@ -11,7 +11,7 @@ export default function Transaction(props) {
         <strong>Status:</strong> {status}
       </p>
       <p>
-        <strong>Prijs:</strong> €{price}
+        <strong>Prijs:</strong> €{price} / dag
       </p>
     </div>
   );
