@@ -33,7 +33,7 @@ class NavigationBar extends Component {
               }
               id="basic-nav-dropdown"
               style={{ marginLeft: "45px" }}
-              className="no-caret"
+              className="no-caret" // nog aan te passen + css(pijltje wegdoen)
             >
               <NavDropdown.Item href="#rental">Rental</NavDropdown.Item>
               <NavDropdown.Item href="#travel">Travel</NavDropdown.Item>
@@ -60,7 +60,8 @@ class NavigationBar extends Component {
                     placeholder="Search"
                     className="mr-sm-2"
                     style={{
-                      marginRight: "750px",
+                      marginRight: "550px",
+                      width: "400px",
                     }}
                   />
                 </Form>
