@@ -1,12 +1,12 @@
 import React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
-import theme from "../src/customTheme.js";
+import theme from "./customTheme.js";
 import Navigatiebar from "./components/Navigatiebar.jsx";
 import IntroText from "./components/Introduction.jsx";
 import SlideShow from "./components/Banner.jsx";
 import Footer from "./components/Footer.jsx";
 
-function App() {
+function Home() {
   return (
     <ChakraProvider theme={theme}>
       <Navigatiebar />
@@ -17,4 +17,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;

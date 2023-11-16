@@ -1,16 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App.jsx";
-import "./styles/extra.css";
+import App from "./Home.jsx";
+import theme from "./customTheme.js";
+import Navigatiebar from "./components/Navigatiebar.jsx";
+import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { About, Contact, NotFound, Models, Routes, Home } from "./pages.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
   },
-  { path: "/", element: <Home /> },
   { path: "/about", element: <About /> },
   { path: "/contact", element: <Contact /> },
   { path: "/motors", element: <Models /> },
@@ -20,6 +21,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <ChakraProvider theme={theme}>
+      <Navigatiebar />
+    </ChakraProvider>
     <RouterProvider router={router} />
   </React.StrictMode>
 );
