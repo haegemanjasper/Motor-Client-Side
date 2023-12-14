@@ -11,6 +11,12 @@ import {
   Select,
   Textarea,
   FormLabel,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import theme from "./customTheme.js";
 import IntroText from "./components/Introduction";
@@ -77,11 +83,31 @@ export const Contact = () => {
     message: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your logic to handle the form submission here
-    console.log("Form submitted:", formData);
+    setIsSubmitting(true);
+
+    // Simulate form submission delay
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setFormData({
+        inquiryType: "",
+        collectionPoint: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        message: "",
+      });
+      onOpen(); // Open the verification pop-up
+    }, 2000);
   };
 
   // Handle input changes
@@ -185,12 +211,36 @@ export const Contact = () => {
               onChange={handleChange}
               isRequired
             />
-            <Button type="submit" colorScheme="blue">
+            <Button
+              type="submit"
+              colorScheme="blue"
+              isLoading={isSubmitting}
+              loadingText="Submitting"
+            >
               Submit
             </Button>
           </VStack>
         </form>
       </Box>
+
+      {/* Verification AlertDialog */}
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Form Submitted!
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            Thank you for submitting the form. We will get back to you soon.
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button colorScheme="blue" onClick={onClose} ml={3}>
+              Close
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Footer />
     </ChakraProvider>
   );
