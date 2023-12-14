@@ -1,31 +1,15 @@
+import React from "react";
 import { IoStarSharp } from "react-icons/io5";
-import { useState } from "react";
 
-const Star = ({ index, selected = false, onSelect = (f) => f }) => {
-  const handleSelect = () => {
-    onSelect(index + 1);
-  };
-
-  return (
-    <IoStarSharp color={selected ? "red" : "grey"} onClick={handleSelect} />
-  );
+const Star = ({ selected = false }) => {
+  return <IoStarSharp color={selected ? "red" : "grey"} />;
 };
 
-export default function StarRating({
-  totalStars = 5,
-  selectedStars = 0,
-  onRate,
-}) {
-  const [rating, setRating] = useState(selectedStars);
+export default function StarRating({ totalStars = 5, selectedStars = 0 }) {
   return (
     <>
       {[...new Array(totalStars)].map((_, i) => (
-        <Star
-          key={i}
-          index={i}
-          selected={selectedStars > i}
-          onSelect={onRate}
-        />
+        <Star key={i} selected={selectedStars > i} />
       ))}{" "}
       <p>
         Rated {selectedStars} out of {totalStars} stars
