@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { IoStarSharp } from "react-icons/io5";
+import { useTheme } from "@chakra-ui/react";
+import customTheme from "../customTheme";
 
-const Star = ({ selected = false }) => {
-  return <IoStarSharp color={selected ? "red" : "grey"} />;
+const Star = ({ index, selected = false, onSelect = (f) => f }) => {
+  const handleClick = useCallback(() => {
+    onSelect(index + 1);
+  }, [index, onSelect]);
+
+  const theme = customTheme();
+  const starColor = selected
+    ? theme.colors.yellow[500]
+    : theme.colors.gray[500];
+
+  return <IoStarSharp color={starColor} onClick={handleClick} />;
 };
 
-export default function StarRating({ totalStars = 5, selectedStars = 0 }) {
+export default function StarRating({
+  totalStars = 5,
+  selectedStars = 0,
+  onRate,
+}) {
+  const theme = useTheme();
+  const starRatingColor =
+    selectedStars > 0 ? theme.colors.yellow[500] : theme.colors.gray[500];
+
   return (
     <>
       {[...new Array(totalStars)].map((_, i) => (
-        <Star key={i} selected={selectedStars > i} />
-      ))}{" "}
-      <p>
-        Rated {selectedStars} out of {totalStars} stars
+        <Star
+          key={i}
+          index={i}
+          selected={selectedStars > i}
+          onSelect={onRate}
+        />
+      ))}
+      <p style={{ color: starRatingColor }}>
+        {selectedStars} of {totalStars} stars
       </p>
     </>
   );

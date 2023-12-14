@@ -1,26 +1,45 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import StarRating from "../components/starRating.jsx";
+import { Box, Flex, Button, Text } from "@chakra-ui/react";
 
-const Motors = ({ id, name, image, price, available, rating }) => {
+const Motors = ({ id, name, image, price, available }) => {
   return (
-    <Box width="25%" padding="4">
+    <Box
+      width="30%"
+      padding="4"
+      mb="4"
+      border="1px"
+      borderRadius="md"
+      borderColor="brown.300"
+      marginRight="1%"
+    >
       <Flex direction="column" align="center">
-        <Box mb="3">
-          <h5>{name}</h5>
-        </Box>
         <Box mb="3">
           <img
             src={image}
             alt={name}
-            style={{ maxWidth: "250px", maxHeight: "250px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              maxWidth: "250px",
+              maxHeight: "250px",
+            }}
           />
         </Box>
-        <Box mb="3">
-          <p>Price: {price}</p>
-          <p>Available: {available ? "Yes" : "No"}</p>
-          <StarRating selectedStars={rating} readOnly={true} />
+        <Box mb="2">
+          <strong>{name}</strong>
         </Box>
+        <Box mb="3">
+          <p>Price/day: {price}</p>
+          <p>Available: {available ? "Yes" : "No"}</p>
+        </Box>
+        <Flex alignItems="center">
+          <Text as="p" color="red.500" cursor="pointer">
+            MORE INFO
+          </Text>
+          <Button marginLeft="200px" colorScheme="red">
+            BOOK
+          </Button>
+        </Flex>
       </Flex>
     </Box>
   );

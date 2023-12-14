@@ -19,10 +19,10 @@ function Navigatiebar() {
           alt="logo"
           boxSize="100px"
           objectFit="contain"
-          marginLeft="25px"
+          marginLeft="50px"
         />
       </Box>
-      <Text fontSize="xl" fontWeight="bold" marginRight="200px">
+      <Text fontSize="xl" fontWeight="bold" marginRight="400px">
         Outlaw Road Warriors
       </Text>
       <SearchBar />
@@ -47,14 +47,14 @@ function Navigatiebar() {
           Home
         </Link>
         <Link
-          href="/routes"
+          href="/locations"
           _hover={{
             textDecoration: "none",
             color: "#B74C44",
             fontSize: "20px",
           }}
         >
-          Routes
+          Locations
         </Link>
         <Link
           href="/motors"
