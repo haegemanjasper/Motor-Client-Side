@@ -75,12 +75,14 @@ export const Login = () => (
 
 export const Cart = () => (
   <ChakraProvider theme={theme}>
-    <Box p={4}>
-      <Heading as="h1" mb={1}>
-        Winkelmand
-      </Heading>
-      <ShoppingCart />
-    </Box>
+    <Flex direction="column" align="left" minH="100vh">
+      <Box flex="1">
+        <Heading as="h1" mb={1}>
+          Winkelmand
+        </Heading>
+        <ShoppingCart />
+      </Box>
+    </Flex>
     <Footer />
   </ChakraProvider>
 );
