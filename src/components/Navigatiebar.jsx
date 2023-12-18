@@ -1,5 +1,16 @@
 import React from "react";
-import { Box, Flex, Image, Link, HStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  Link,
+  HStack,
+  Text,
+  Button,
+  Icon,
+} from "@chakra-ui/react";
+import { FiShoppingCart } from "react-icons/fi";
+import { HiUser } from "react-icons/hi";
 import logo from "../images/logo.png";
 import SearchBar from "../components/Searchbar.jsx";
 
@@ -18,15 +29,15 @@ function Navigatiebar() {
         <Image
           src={logo}
           alt="logo"
-          boxSize="50px"
+          boxSize="80px"
           objectFit="contain"
-          marginLeft="10px"
+          marginLeft="30px"
         />
       </Box>
-      <Text fontSize="xl" fontWeight="bold" marginLeft="50px">
+      <Text fontSize="xl" fontWeight="bold" marginLeft="20px">
         Outlaw Road Warriors
       </Text>
-      <div style={{ marginLeft: "10px" }}>
+      <div style={{ marginLeft: "80px" }}>
         <SearchBar />
       </div>
       <HStack
@@ -37,8 +48,8 @@ function Navigatiebar() {
         bg="navbarBg"
         display="flex"
         alignItems={"center"}
-        width={["15%", "5%", "50%"]}
-        marginLeft="50px"
+        width={["15%", "10%", "35%"]}
+        marginLeft="auto"
       >
         <Link
           href="/"
@@ -89,6 +100,19 @@ function Navigatiebar() {
           }}
         >
           Contact
+        </Link>
+        <Link
+          href="/cart"
+          _hover={{ textDecoration: "none", color: "#B74C44" }}
+        >
+          <Icon as={FiShoppingCart} boxSize={6} />
+        </Link>
+        {/* Login pictogram */}
+        <Link
+          href="/login"
+          _hover={{ textDecoration: "none", color: "#B74C44" }}
+        >
+          <Icon as={HiUser} boxSize={6} />
         </Link>
       </HStack>
     </Flex>
