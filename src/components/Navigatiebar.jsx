@@ -107,7 +107,6 @@ function Navigatiebar() {
         >
           <Icon as={FiShoppingCart} boxSize={6} />
         </Link>
-        {/* Login pictogram */}
         <Link
           href="/login"
           _hover={{ textDecoration: "none", color: "#B74C44" }}

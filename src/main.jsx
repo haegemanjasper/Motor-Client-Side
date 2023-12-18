@@ -4,7 +4,18 @@ import theme from "./customTheme.js";
 import Navigatiebar from "./components/Navigatiebar.jsx";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { About, Contact, NotFound, Models, Locations, Home } from "./pages.jsx";
+import {
+  About,
+  Contact,
+  NotFound,
+  Models,
+  Locations,
+  Home,
+  Login,
+  Cart,
+} from "./pages.jsx";
+import ShoppingCart from "./components/ShoppingCart.jsx";
+import { ShoppingCartProvider } from "./components/ShoppingCartContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -15,14 +26,18 @@ const router = createBrowserRouter([
   { path: "/contact", element: <Contact /> },
   { path: "/motors", element: <Models /> },
   { path: "/locations", element: <Locations /> },
+  { path: "/login", element: <Login /> },
+  { path: "/cart", element: <Cart /> },
   { path: "*", element: <NotFound /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <Navigatiebar />
+      <ShoppingCartProvider>
+        <Navigatiebar />
+        <RouterProvider router={router} />
+      </ShoppingCartProvider>
     </ChakraProvider>
-    <RouterProvider router={router} />
   </React.StrictMode>
 );
