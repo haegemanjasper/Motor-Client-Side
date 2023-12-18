@@ -11,21 +11,24 @@ function Navigatiebar() {
       color="#FFFFFF"
       justifyContent="space-between"
       alignItems="center"
-      padding="10px"
+      padding="30px"
+      marginBottom="0"
     >
       <Box className="logo">
         <Image
           src={logo}
           alt="logo"
-          boxSize="100px"
+          boxSize="50px"
           objectFit="contain"
-          marginLeft="50px"
+          marginLeft="10px"
         />
       </Box>
-      <Text fontSize="xl" fontWeight="bold" marginRight="400px">
+      <Text fontSize="xl" fontWeight="bold" marginLeft="50px">
         Outlaw Road Warriors
       </Text>
-      <SearchBar />
+      <div style={{ marginLeft: "10px" }}>
+        <SearchBar />
+      </div>
       <HStack
         as="ul"
         spacing={4}
@@ -34,7 +37,8 @@ function Navigatiebar() {
         bg="navbarBg"
         display="flex"
         alignItems={"center"}
-        width={["100%", "50%", "25%"]}
+        width={["15%", "5%", "50%"]}
+        marginLeft="50px"
       >
         <Link
           href="/"

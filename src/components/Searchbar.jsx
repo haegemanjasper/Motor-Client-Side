@@ -1,37 +1,71 @@
-import React, { useState } from "react";
-import { Input, InputGroup, InputLeftElement, Box } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Input,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+} from "@chakra-ui/react";
+import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 
 const SearchBar = ({ items, onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = () => {
-    // Simpel doorzoeken op basis van de naam van de items
-    const filteredItems = items.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    if (items) {
+      const filteredItems = items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
 
-    // Doorgeven van de gefilterde items aan de bovenliggende component
-    onSearch(filteredItems);
+      onSearch(filteredItems);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    };
+
+    document.addEventListener("keypress", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [searchTerm, items, onSearch]);
+
+  const handleClear = () => {
+    setSearchTerm("");
+    onSearch(items);
   };
 
   return (
     <Box>
       <InputGroup>
-        <InputLeftElement pointerEvents="none">
-          <SearchIcon color="gray.300" />
-        </InputLeftElement>
         <Input
           type="text"
           placeholder="Zoeken..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
         />
+        <InputRightElement>
+          {searchTerm && (
+            <IconButton
+              aria-label="Clear search"
+              icon={<CloseIcon />}
+              onClick={handleClear}
+            />
+          )}
+          <IconButton
+            aria-label="Search"
+            colorScheme="blue"
+            icon={<SearchIcon />}
+            onClick={handleSearch}
+          />
+        </InputRightElement>
       </InputGroup>
     </Box>
   );

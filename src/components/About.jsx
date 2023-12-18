@@ -53,7 +53,7 @@ const AboutUs = () => {
             <Text>Slovenia</Text>
           </VStack>
         </HStack>
-        <Text fontSize="xl">
+        <Text fontSize="xl" color="red">
           Connect with us for more updates and information! You can check us out
           on the buttons below.
         </Text>
