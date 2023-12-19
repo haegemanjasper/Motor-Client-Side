@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Button, Text } from "@chakra-ui/react";
 
-const Motors = ({ id, name, image, price, available }) => {
+const Motors = ({ name, image, price, available }) => {
   return (
     <Box
       width="30%"
@@ -20,7 +20,7 @@ const Motors = ({ id, name, image, price, available }) => {
             style={{
               width: "100%",
               height: "auto",
-              maxWidth: "250px",
+              maxWidth: "100%",
               maxHeight: "250px",
             }}
           />
@@ -36,7 +36,7 @@ const Motors = ({ id, name, image, price, available }) => {
           <Text as="p" color="red.500" cursor="pointer">
             MORE INFO
           </Text>
-          <Button marginLeft="200px" colorScheme="red">
+          <Button marginLeft="auto" colorScheme="red">
             BOOK
           </Button>
         </Flex>
