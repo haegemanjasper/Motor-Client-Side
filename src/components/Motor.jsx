@@ -48,22 +48,24 @@ const Motors = ({
             }}
           />
         </Box>
-        <Box mb="2">
+        <Box mb="2" marginRight="30px">
           <strong>{`${model}`}</strong>
         </Box>
-        <Box mb="2">
-          <p>Merk: {merk}</p>
-          <p>Prijs/dag: {huurprijs_per_dag}</p>
+        <Box mb="2" textAlign="center">
+          <p>{merk}</p>
+          <p>
+            € <strong>{huurprijs_per_dag}</strong> / dag
+          </p>
           <p>Beschikbaar: {beschikbaarheid ? "Ja" : "Nee"}</p>
-          <Flex>
+          <Flex marginLeft="10px">
             <StarRating selectedStars={backendRating} totalStars={5} />
           </Flex>
         </Box>
         <Flex alignItems="center">
-          <Text as="p" color="red.500" cursor="pointer">
+          <Text as="p" color="red.500" cursor="pointer" marginRight="100px">
             MEER INFO
           </Text>
-          <Button marginLeft="auto" colorScheme="red">
+          <Button marginLeft="100px" colorScheme="red">
             BOEK
           </Button>
         </Flex>
