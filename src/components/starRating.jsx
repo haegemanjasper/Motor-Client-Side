@@ -1,14 +1,14 @@
 import React, { useCallback } from "react";
 import { IoStarSharp } from "react-icons/io5";
 import { useTheme } from "@chakra-ui/react";
-import customTheme from "../customTheme";
+import customTheme from "../../src/customTheme";
 
 const Star = ({ index, selected = false, onSelect = (f) => f }) => {
   const handleClick = useCallback(() => {
     onSelect(index + 1);
   }, [index, onSelect]);
 
-  const theme = customTheme();
+  const theme = useTheme();
   const starColor = selected
     ? theme.colors.yellow[500]
     : theme.colors.gray[500];

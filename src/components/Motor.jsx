@@ -1,7 +1,29 @@
 import React from "react";
 import { Box, Flex, Button, Text } from "@chakra-ui/react";
+import StarRating from "./starRating";
 
-const Motors = ({ name, image, price, available }) => {
+const Motors = ({
+  merk,
+  model,
+  datum,
+  huurprijs_per_dag,
+  beschikbaarheid,
+  rating,
+  images,
+}) => {
+  const backendRating = rating;
+
+  const brandImages = {
+    BMW: "https://i.imgur.com/eHmVqri.png",
+    Yamaha: "https://i.imgur.com/6RjflDi.png",
+    "Harley Davidson": "https://i.imgur.com/ZAFPhyI.png",
+    KTM: "https://i.imgur.com/kTAKUVv.jpg",
+    Honda: "https://i.imgur.com/uPzBHD8.png",
+    Kawasaki: "https://i.imgur.com/oY6HSGF.png",
+  };
+
+  const image = brandImages[merk] || "";
+
   return (
     <Box
       width="30%"
@@ -16,7 +38,7 @@ const Motors = ({ name, image, price, available }) => {
         <Box mb="3">
           <img
             src={image}
-            alt={name}
+            alt={`${merk} ${model} - ${new Date(datum).toLocaleDateString()}`}
             style={{
               width: "100%",
               height: "auto",
@@ -26,18 +48,22 @@ const Motors = ({ name, image, price, available }) => {
           />
         </Box>
         <Box mb="2">
-          <strong>{name}</strong>
+          <strong>{`${model}`}</strong>
         </Box>
         <Box mb="3">
-          <p>Price/day: {price}</p>
-          <p>Available: {available ? "Yes" : "No"}</p>
+          <p>Merk: {merk}</p>
+          <p>Model: {model}</p>
+          <p>Datum: {new Date(datum).toLocaleDateString()}</p>
+          <p>Prijs/dag: {huurprijs_per_dag}</p>
+          <p>Beschikbaar: {beschikbaarheid ? "Ja" : "Nee"}</p>
+          <StarRating selectedStars={backendRating} totalStars={5} />
         </Box>
         <Flex alignItems="center">
           <Text as="p" color="red.500" cursor="pointer">
-            MORE INFO
+            MEER INFO
           </Text>
           <Button marginLeft="auto" colorScheme="red">
-            BOOK
+            BOEK
           </Button>
         </Flex>
       </Flex>

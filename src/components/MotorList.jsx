@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import Motors from "./Motor";
 import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
-import AsyncData from "../components/AsyncData";
+import AsyncData from "./AsyncData";
 import { getAll, save, deleteById } from "../api/index";
 
 const MotorList = () => {
@@ -33,7 +33,6 @@ const MotorList = () => {
   );
 
   useEffect(() => {
-    // Use the mutate function from SWR to manually trigger data refetching
     const fetchData = async () => {
       await mutate("motoren");
     };
