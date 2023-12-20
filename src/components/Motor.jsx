@@ -9,7 +9,6 @@ const Motors = ({
   huurprijs_per_dag,
   beschikbaarheid,
   rating,
-  images,
 }) => {
   const backendRating = rating;
 
@@ -26,16 +25,18 @@ const Motors = ({
 
   return (
     <Box
-      width="30%"
+      width="100%"
       padding="4"
       mb="4"
       border="1px"
       borderRadius="md"
       borderColor="brown.300"
       marginRight="1%"
+      flexBasis="30%"
+      flexShrink={0}
     >
       <Flex direction="column" align="center">
-        <Box mb="3">
+        <Box mb="1">
           <img
             src={image}
             alt={`${merk} ${model} - ${new Date(datum).toLocaleDateString()}`}
@@ -50,13 +51,13 @@ const Motors = ({
         <Box mb="2">
           <strong>{`${model}`}</strong>
         </Box>
-        <Box mb="3">
+        <Box mb="2">
           <p>Merk: {merk}</p>
-          <p>Model: {model}</p>
-          <p>Datum: {new Date(datum).toLocaleDateString()}</p>
           <p>Prijs/dag: {huurprijs_per_dag}</p>
           <p>Beschikbaar: {beschikbaarheid ? "Ja" : "Nee"}</p>
-          <StarRating selectedStars={backendRating} totalStars={5} />
+          <Flex>
+            <StarRating selectedStars={backendRating} totalStars={5} />
+          </Flex>
         </Box>
         <Flex alignItems="center">
           <Text as="p" color="red.500" cursor="pointer">

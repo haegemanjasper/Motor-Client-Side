@@ -42,23 +42,31 @@ const MotorList = () => {
 
   return (
     <div>
-      <h1>Motors</h1>
-
       <AsyncData
         loading={!motors}
         error={error || saveError || deleteError || isSaving || isDeleting}
       >
-        {motors &&
-          motors.map((motor) => (
-            <Motors
-              {...motor}
-              key={motor.id}
-              onUpdate={(updatedMotor) =>
-                handleUpdateMotor(motor.id, updatedMotor)
-              }
-              onDelete={() => handleDeleteMotor(motor.id)}
-            />
-          ))}
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {motors &&
+            motors.map((motor) => (
+              <div
+                key={motor.id}
+                style={{
+                  width: "30%",
+                  marginBottom: "20px",
+                  marginRight: "1%",
+                }}
+              >
+                <Motors
+                  {...motor}
+                  onUpdate={(updatedMotor) =>
+                    handleUpdateMotor(motor.id, updatedMotor)
+                  }
+                  onDelete={() => handleDeleteMotor(motor.id)}
+                />
+              </div>
+            ))}
+        </div>
       </AsyncData>
     </div>
   );

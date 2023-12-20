@@ -53,7 +53,9 @@ export const Models = () => (
       <Heading as="h1" mb={1}>
         Models
       </Heading>
-      <MotorList />
+      <Flex flexWrap="wrap">
+        <MotorList />
+      </Flex>
     </Box>
     <Footer />
   </ChakraProvider>
