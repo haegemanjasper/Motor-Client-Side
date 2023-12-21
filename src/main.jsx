@@ -14,8 +14,7 @@ import {
   Login,
   Cart,
 } from "./pages.jsx";
-import ShoppingCart from "./components/ShoppingCart.jsx";
-import { ShoppingCartProvider } from "./components/ShoppingCartContext.jsx";
+import { ShoppingCartProvider } from "./components/extra/cart/ShoppingCartContext.jsx";
 
 const router = createBrowserRouter([
   {

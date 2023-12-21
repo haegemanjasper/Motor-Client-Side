@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback } from "react";
-import Motors from "./Motor";
+import Motors from "./motorDetail.jsx";
 import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
-import AsyncData from "./AsyncData";
-import { getAll, save, deleteById } from "../api/index";
+import AsyncData from "../AsyncData.jsx";
+import { getAll, save, deleteById } from "../../api/index.js";
 
 const MotorList = () => {
   const { data: motors, error } = useSWR("motoren", getAll);

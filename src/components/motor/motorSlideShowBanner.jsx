@@ -1,12 +1,12 @@
 import React from "react";
 import Slider from "react-slick";
-import bannerImage from "../images/banner.jpg";
-import bannerImage3 from "../images/banner3.jpg";
-import bannerImage4 from "../images/banner4.jpg";
-import bannerImage5 from "../images/banner5.jpg";
+import bannerImage from "../../images/banner.jpg";
+import bannerImage3 from "../../images/banner3.jpg";
+import bannerImage4 from "../../images/banner4.jpg";
+import bannerImage5 from "../../images/banner5.jpg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "../styles/extra.css";
+import "../../styles/extra.css";
 
 const SlideShow = () => {
   const settings = {

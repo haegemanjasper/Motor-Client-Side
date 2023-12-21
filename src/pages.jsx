@@ -2,15 +2,14 @@ import React from "react";
 import { ChakraProvider, Box, Heading, Flex } from "@chakra-ui/react";
 import theme from "./customTheme.js";
 import IntroText from "./components/Introduction";
-import SlideShow from "./components/Banner.jsx";
+import SlideShow from "./components/motor/motorSlideShowBanner.jsx";
 import Footer from "./components/Footer.jsx";
 import NotFoundPage from "./components/NotFound.jsx";
-import ContactUs from "./components/Contact.jsx";
-import AboutUs from "./components/About.jsx";
-import Location from "./components/Location.jsx";
-import MotorList from "./components/MotorList";
-import LoginPage from "./components/Login.jsx";
-import ShoppingCart from "./components/ShoppingCart.jsx";
+import ContactUs from "./components/extra/contact/Contact.jsx";
+import AboutUs from "./components/extra/about/About.jsx";
+import MotorList from "./components//motor/motorList.jsx";
+import LoginPage from "./components/extra/profile/login.jsx";
+import ShoppingCart from "./components/extra/cart/ShoppingCart.jsx";
 
 export const Home = () => (
   <div>
