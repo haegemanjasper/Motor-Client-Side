@@ -4,8 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { AuthProvider } from "./context/auth-context.jsx";
 import theme from "./theme.js";
-import Login from "./pages/login.jsx";
-import Register from "./pages/register.jsx";
+import Home from "./pages/home.jsx";
+import Root from "./root.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +18,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <AuthProvider>
-            <ChakraProvider theme={theme}></ChakraProvider>
+            <ChakraProvider theme={theme}>
+                <RouterProvider router={router} />
+            </ChakraProvider>
         </AuthProvider>
     </React.StrictMode>
 );
