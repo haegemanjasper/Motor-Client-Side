@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { HiUserCircle } from "react-icons/hi";
 import { HiShoppingCart } from "react-icons/hi";
+import logo from "../../assets/logo site.png";
 
 export default function CustomNavbar() {
     const [searchValue, setSearchValue] = useState("");
@@ -34,29 +35,20 @@ export default function CustomNavbar() {
         <Navbar className="custom-navbar" variant="dark">
             <Container>
                 <Row>
-                    <Col className="d-flex justify-content-center">
-                        <Navbar.Brand href="#logo" style={linkStyle}>
-                            <img
-                                src="../src/images/logo.png"
-                                alt="Logo"
-                                style={{
-                                    marginRight: "10px",
-                                    marginLeft: "-50px",
-                                }}
-                            />
-                            TwoWheelGetaways
-                        </Navbar.Brand>
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <img
+                            src={logo}
+                            alt="Logo"
+                            style={{ marginRight: "10px" }}
+                        />
+                        My First Motor Site
                     </Col>
-                    <Col className="d-flex justify-content-center">
+                    <Col className="d-flex justify-content-center align-items-center">
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <div
-                                style={{ marginLeft: "300px", color: "white" }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faSearch}
-                                    style={linkStyle}
-                                />
-                            </div>
+                            <FontAwesomeIcon
+                                icon={faSearch}
+                                style={linkStyle}
+                            />
                             <Form inline>
                                 <FormControl
                                     type="text"
@@ -72,27 +64,17 @@ export default function CustomNavbar() {
                             </Form>
                         </div>
                     </Col>
-                    <Col className="d-flex justify-content-center">
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                marginLeft: "50px",
-                                marginRight: "50px",
-                            }}
-                        >
-                            <HiUserCircle />
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <HiUserCircle style={{ marginRight: "10px" }} />
                             <HiShoppingCart />
                         </div>
                     </Col>
-                    <Col className="d-flex justify-content-center">
-                        {/* Voeg hier de link naar de "Over ons" pagina toe */}
-                        <a href="#overus" style={linkStyle}>
-                            Over ons
-                        </a>
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <a href="#overus">Over ons</a>
                     </Col>
-                    <Col className="d-flex justify-content-center">
-                        <Nav style={{ marginLeft: "20px" }}>
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <Nav>
                             <NavDropdown
                                 title={<div style={linkStyle}>Models</div>}
                                 style={dropdownStyle}
