@@ -7,12 +7,16 @@ import theme from "./theme.js";
 import Home from "./pages/home.jsx";
 import Root from "./root.jsx";
 import Footer from "./components/footer/footer.jsx";
+import Register from "./pages/register.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Root />,
-        children: [{ index: true, element: <Home /> }],
+        children: [
+            { index: true, element: <Home /> },
+            { path: "/register", element: <Register /> },
+        ],
     },
 ]);
 
