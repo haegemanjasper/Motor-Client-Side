@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/auth-context.jsx";
 import theme from "./theme.js";
 import Home from "./pages/home.jsx";
 import Root from "./root.jsx";
+import Footer from "./components/footer/footer.jsx";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <AuthProvider>
             <ChakraProvider theme={theme}>
                 <RouterProvider router={router} />
+                <Footer />
             </ChakraProvider>
         </AuthProvider>
     </React.StrictMode>
