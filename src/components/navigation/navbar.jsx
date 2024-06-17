@@ -1,105 +1,239 @@
-import React, { useState } from "react";
+import React from "react";
+("use client");
+
 import {
-    Navbar,
-    Nav,
-    NavDropdown,
-    Form,
-    FormControl,
+    Box,
+    Flex,
+    Avatar,
+    HStack,
+    Text,
+    IconButton,
+    Button,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    MenuDivider,
+    useColorMode,
+    useDisclosure,
+    useColorModeValue,
+    Stack,
+    Link,
+    Divider,
     Container,
-    Row,
-    Col,
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { HiUserCircle } from "react-icons/hi";
-import { HiShoppingCart } from "react-icons/hi";
+    VStack,
+    Center,
+} from "@chakra-ui/react";
+import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import logo from "../../assets/logo site.png";
+import { useAuth } from "../../context/auth-context";
+import { Link as RouterLink } from "react-router-dom";
+//import CartButton from "./shop/CartButton";
+import NotificationButton from "../notifications/NotificationButton";
+import { useEffect, useState } from "react";
 
-export default function CustomNavbar() {
-    const [searchValue, setSearchValue] = useState("");
+const Links = [
+    { text: "Home", link: "/", roles: ["Guest", "User", "Admin"] },
+    { text: "About Us", link: "/aboutus", roles: ["Guest", "User", "Admin"] },
+    {
+        text: "Rent A Bike",
+        link: "/rentabike",
+        roles: ["Guest", "User", "Admin"],
+    },
+    { text: "Dashboard", link: "/dashboard", roles: ["Admin"] },
+];
 
-    const handleSearchChange = (event) => {
-        setSearchValue(event.target.value);
-    };
+const NavLink = ({ children, link }) => {
+    return (
+        <Box
+            as="a"
+            px={2}
+            py={1}
+            rounded={"md"}
+            _hover={{
+                textDecoration: "none",
+                bg: useColorModeValue("gray.200", "gray.700"),
+            }}
+            href={link}
+            textAlign="center"
+        >
+            {children}
+        </Box>
+    );
+};
 
-    const linkStyle = {
-        textDecoration: "none",
-        color: "darkgray",
-    };
+export default function Navbar() {
+    const [userRole, setUserRole] = useState("Guest");
 
-    const dropdownStyle = {
-        backgroundColor: "transparent !important",
-    };
+    useEffect(() => {
+        fetchUserRoleFromDatabase().then((role) => setUserRole(role));
+    }, []);
+
+    const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
+
+    const { colorMode, toggleColorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isAuthed, user, logout } = useAuth();
 
     return (
-        <Navbar className="custom-navbar" variant="dark">
-            <Container>
-                <Row>
-                    <Col className="d-flex justify-content-center align-items-center">
-                        <img
-                            src={logo}
-                            alt="Logo"
-                            style={{ marginRight: "10px" }}
+        <>
+            <Container maxW="1280px">
+                <Box>
+                    <Flex
+                        h={16}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                    >
+                        <IconButton
+                            size={"md"}
+                            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                            aria-label={"Open Menu"}
+                            display={{ md: "none" }}
+                            onClick={isOpen ? onClose : onOpen}
                         />
-                        My First Motor Site
-                    </Col>
-                    <Col className="d-flex justify-content-center align-items-center">
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <FontAwesomeIcon
-                                icon={faSearch}
-                                style={linkStyle}
-                            />
-                            <Form inline>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Search"
-                                    className="mr-sm-2"
-                                    value={searchValue}
-                                    onChange={handleSearchChange}
-                                    style={{
-                                        marginLeft: "10px",
-                                        width: "250px",
-                                    }}
+                        <HStack spacing={2} alignItems={"center"}>
+                            <Box>
+                                <img
+                                    src={logo}
+                                    alt="Logo"
+                                    height="50px"
+                                    width="75px"
                                 />
-                            </Form>
-                        </div>
-                    </Col>
-                    <Col className="d-flex justify-content-center align-items-center">
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <HiUserCircle style={{ marginRight: "10px" }} />
-                            <HiShoppingCart />
-                        </div>
-                    </Col>
-                    <Col className="d-flex justify-content-center align-items-center">
-                        <a href="#overus">Over ons</a>
-                    </Col>
-                    <Col className="d-flex justify-content-center align-items-center">
-                        <Nav>
-                            <NavDropdown
-                                title={<div style={linkStyle}>Models</div>}
-                                style={dropdownStyle}
-                                id="basic-nav-dropdown"
+                            </Box>
+                            <HStack
+                                as={"nav"}
+                                spacing={4}
+                                display={{ base: "none", md: "flex" }}
                             >
-                                <NavDropdown.Item href="#bmw">
-                                    BMW
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#yamaha">
-                                    Yamaha
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#ktm">
-                                    KTM
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#kawasaki">
-                                    Kawasaki
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#honda">
-                                    Honda
-                                </NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                    </Col>
-                </Row>
+                                {filteredLinks.map((item) => (
+                                    <NavLink key={item.text} link={item.link}>
+                                        {item.text}
+                                    </NavLink>
+                                ))}
+                            </HStack>
+                        </HStack>
+                        <Flex
+                            alignItems={"center"}
+                            display={{ base: "none", md: "flex" }}
+                        >
+                            {isAuthed ? (
+                                <Menu>
+                                    <MenuButton>
+                                        <Avatar
+                                            size="sm"
+                                            name={user.username}
+                                        />
+                                    </MenuButton>
+                                    <MenuList>
+                                        <MenuItem as={RouterLink} to="/profile">
+                                            Account
+                                        </MenuItem>
+                                        <MenuDivider />
+                                        <MenuItem onClick={logout}>
+                                            Logout
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
+                            ) : (
+                                <HStack spacing={4}>
+                                    <Link href="/login">
+                                        <Button
+                                            colorScheme="green"
+                                            variant="outline"
+                                            textAlign="center"
+                                        >
+                                            <Text height="10px">Log in</Text>
+                                        </Button>
+                                    </Link>
+
+                                    <Link href="/register">
+                                        <Button
+                                            colorScheme="green"
+                                            textAlign="center"
+                                        >
+                                            <Text height="10px">Sign up</Text>
+                                        </Button>
+                                    </Link>
+
+                                    <Button onClick={toggleColorMode}>
+                                        {colorMode === "light" ? (
+                                            <MoonIcon />
+                                        ) : (
+                                            <SunIcon />
+                                        )}
+                                    </Button>
+                                </HStack>
+                            )}
+                        </Flex>
+                    </Flex>
+                    {isOpen ? (
+                        <Box pb={4} display={{ md: "none" }}>
+                            <Stack as={"nav"} spacing={4}>
+                                {filteredLinks.map(({ text, link }) => (
+                                    <NavLink key={text} link={link}>
+                                        {text}
+                                    </NavLink>
+                                ))}
+                                {isAuthed ? (
+                                    <Menu>
+                                        <MenuButton>
+                                            <Avatar size="sm" name="pedro" />
+                                        </MenuButton>
+                                        <MenuList>
+                                            <MenuItem
+                                                as={RouterLink}
+                                                to="/profile"
+                                            >
+                                                Account
+                                            </MenuItem>
+                                            <MenuDivider />
+                                            <MenuItem onClick={logout}>
+                                                Logout
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                ) : (
+                                    <VStack spacing={4}>
+                                        <Link href="/login" w="100%">
+                                            <Button colorScheme="red" w="100%">
+                                                <Text>Log in</Text>
+                                            </Button>
+                                        </Link>
+
+                                        <Link href="/register" w="100%">
+                                            <Button
+                                                colorScheme="red"
+                                                variant="outline"
+                                                w="100%"
+                                            >
+                                                <Text>Sign up</Text>
+                                            </Button>
+                                        </Link>
+
+                                        <Button
+                                            onClick={toggleColorMode}
+                                            w="100%"
+                                        >
+                                            {colorMode === "light" ? (
+                                                <MoonIcon />
+                                            ) : (
+                                                <SunIcon />
+                                            )}
+                                        </Button>
+                                    </VStack>
+                                )}
+                            </Stack>
+                        </Box>
+                    ) : null}
+                </Box>
+                <Divider />
             </Container>
-        </Navbar>
+        </>
     );
+}
+
+async function fetchUserRoleFromDatabase(username) {
+    const response = await fetch(`/api/role/${username}`);
+    const data = await response.json();
+    return data.role;
 }

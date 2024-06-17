@@ -48,7 +48,7 @@ export default function CustomCarousel() {
         );
 
     return (
-        <Box width="90%" mx="auto" mt={5}>
+        <Box width="100%" mx="auto">
             <Box borderRadius="lg" overflow="hidden">
                 <Carousel
                     showStatus={false}
