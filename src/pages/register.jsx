@@ -47,7 +47,7 @@ export default function RegisterForm() {
                     >
                         <VStack spacing={2} as="form" width="100%">
                             <Text fontSize="2xl" fontWeight="bold">
-                                Register
+                                Sign up
                             </Text>
                             <FormControl isRequired width="100%">
                                 <FormLabel htmlFor="firstname">
