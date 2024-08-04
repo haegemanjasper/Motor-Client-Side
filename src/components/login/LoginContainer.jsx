@@ -15,16 +15,37 @@ const LoginContainer = () => {
         async (formData) => {
             setIsLoading(true);
             const { email, password } = formData;
-            const loggedIn = await login(email, password);
 
-            if (loggedIn) {
-                navigate({
-                    pathname: "/",
-                    replace: true,
-                });
-            } else {
-                setLoginError("Incorrect email or password.");
+            try {
+                const response = await fetch(
+                    "http://localhost:9000/api/klanten/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ email, password }),
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    login(data.token);
+                    navigate({ pathname: "/", replace: true });
+                } else {
+                    const result = await response.json();
+                    setLoginError(
+                        result.message || "Incorrect email or password."
+                    );
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                setLoginError(
+                    "An unexpected error occurred. Please try again."
+                );
             }
+
             setIsLoading(false);
         },
         [login, navigate]
@@ -46,7 +67,7 @@ const LoginContainer = () => {
                 <LoginHeader />
                 <LoginForm
                     handleLogin={handleLogin}
-                    errors={{}} // Pass the appropriate errors if needed
+                    errors={{}}
                     isLoading={isLoading}
                     loginError={loginError}
                 />

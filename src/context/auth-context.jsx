@@ -15,7 +15,6 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-// 👇 2
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY));
     const [user, setUser] = useState(localStorage.getItem("user"));
@@ -34,7 +33,6 @@ export const AuthProvider = ({ children }) => {
         trigger: doLogin,
     } = useSWRMutation("users/login", api.post);
 
-    // 👇 6
     const login = useCallback(
         async (email, password) => {
             try {
