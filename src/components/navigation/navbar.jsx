@@ -1,77 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     Flex,
-    HStack,
     IconButton,
     useDisclosure,
+    useColorMode,
+    useColorModeValue,
     Divider,
     Container,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import NavLinks from "./NavLinks";
+import AuthControls from "./AuthControls";
+import logo from "../../assets/logo site.png";
 import { useAuth } from "../../context/auth-context";
-import Logo from "./Logo";
-import {
-    NavigationLinks,
-    MobileNavigationLinks,
-    Links,
-} from "./NavigationLinks";
-import UserMenu from "./UserMenu";
-import AuthButtons from "./AuthButtons";
-import MobileNavigation from "./MobileNavigation";
 
-export default function Navbar() {
+const Navbar = () => {
     const [userRole, setUserRole] = useState("Guest");
+    const { colorMode, toggleColorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isAuthed, logout } = useAuth();
 
     useEffect(() => {
-        fetchUserRoleFromDatabase().then((role) => setUserRole(role));
+        const fetchUserRole = async () => {
+            const role = await fetchUserRoleFromDatabase();
+            setUserRole(role);
+        };
+        fetchUserRole();
     }, []);
 
-    const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const { isAuthed } = useAuth();
-
     return (
-        <>
-            <Container maxW="1280px">
-                <Box>
-                    <Flex
-                        h={16}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                    >
-                        <IconButton
-                            size={"md"}
-                            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-                            aria-label={"Open Menu"}
-                            display={{ md: "none" }}
-                            onClick={isOpen ? onClose : onOpen}
-                        />
-                        <HStack spacing={2} alignItems={"center"}>
-                            <Logo />
-                            <NavigationLinks filteredLinks={filteredLinks} />
-                        </HStack>
-                        <Flex
-                            alignItems={"center"}
-                            display={{ base: "none", md: "flex" }}
-                        >
-                            {isAuthed ? <UserMenu /> : <AuthButtons />}
-                        </Flex>
-                    </Flex>
-                    <MobileNavigation
-                        isOpen={isOpen}
-                        filteredLinks={filteredLinks}
-                        isAuthed={isAuthed}
+        <Container maxW="1280px">
+            <Box>
+                <Flex
+                    h={16}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                >
+                    <IconButton
+                        size={"md"}
+                        icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                        aria-label={"Open Menu"}
+                        display={{ md: "none" }}
+                        onClick={isOpen ? onClose : onOpen}
                     />
-                </Box>
+                    <Flex alignItems={"center"}>
+                        <Box>
+                            <img
+                                src={logo}
+                                alt="Logo"
+                                height="50px"
+                                width="75px"
+                            />
+                        </Box>
+                        <NavLinks userRole={userRole} isOpen={false} />
+                    </Flex>
+                    <AuthControls
+                        isAuthed={isAuthed}
+                        logout={logout}
+                        toggleColorMode={toggleColorMode}
+                        colorMode={colorMode}
+                    />
+                </Flex>
+                {isOpen && <NavLinks userRole={userRole} isOpen={true} />}
                 <Divider />
-            </Container>
-        </>
+            </Box>
+        </Container>
     );
+};
+
+async function fetchUserRoleFromDatabase() {
+    return "Klant";
 }
 
-async function fetchUserRoleFromDatabase(username) {
-    const response = await fetch(`/api/role/${username}`);
-    const data = await response.json();
-    return data.role;
-}
+export default Navbar;
