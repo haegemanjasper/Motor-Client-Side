@@ -1,20 +1,10 @@
 import React from "react";
-import {
-    Stack,
-    Center,
-    Heading,
-    HStack,
-    Text,
-    Button,
-    Link,
-} from "@chakra-ui/react";
-import logo from "../../assets/logo site.png";
+import { Heading, HStack, Stack, Text, Button, Link } from "@chakra-ui/react";
+import Logo from "../../components/navigation/Logo";
 
 const LoginHeader = () => (
     <Stack spacing="6">
-        <Center>
-            <img src={logo} alt="Logo" width="100px" />
-        </Center>
+        <Logo size="150" />
         <Stack
             spacing={{
                 base: "2",
@@ -30,12 +20,10 @@ const LoginHeader = () => (
             >
                 Log in to your account
             </Heading>
-            <HStack spacing={6} justify="center">
-                <Text color="gray.500" height="5px">
-                    Don't have an account?
-                </Text>
+            <HStack justify="center">
+                <Text color="fg.muted">Don't have an account?</Text>
                 <Link href="/register">
-                    <Button variant="ghost" colorScheme="green" height="">
+                    <Button variant="ghost" colorScheme="red">
                         Sign up
                     </Button>
                 </Link>

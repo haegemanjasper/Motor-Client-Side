@@ -1,56 +1,58 @@
 import {
-    createContext,
-    useState,
-    useCallback,
-    useMemo,
-    useContext,
+    createContext, // 👈 1
+    useState, // 👈 4
+    useCallback, // 👈 6
+    useMemo, // 👈 5
+    useContext, // 👈 5
     useEffect,
 } from "react";
-import useSWRMutation from "swr/mutation";
-import * as api from "../api";
+import useSWRMutation from "swr/mutation"; // 👈 8
+import * as api from "../api"; // 👈 8
 
-const JWT_TOKEN_KEY = "jwtToken";
-const USER_ID_KEY = "userId";
-const AuthContext = createContext();
+const JWT_TOKEN_KEY = "jwtToken"; // 👈 13
+const KLANT_ID_KEY = "klantId"; // 👈 13
+const AuthContext = createContext(); // 👈 1
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext); // 👈 5
 
 // 👇 2
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY));
-    const [user, setUser] = useState(localStorage.getItem("user"));
-    const [ready, setReady] = useState(false);
-    const [isAuthed, setIsAuthed] = useState(false);
+    const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY)); // 👈 4 en 13
+    const [klant, setKlant] = useState(localStorage.getItem("klant")); // 👈 4
+    const [ready, setReady] = useState(false); // 👈
+    const [isAuthed, setIsAuthed] = useState(false); // 👈
 
     useEffect(() => {
         api.setAuthToken(token);
-        setIsAuthed(Boolean(token));
-        setReady(true);
+        setIsAuthed(Boolean(token)); // 👈
+        setReady(true); // 👈
     }, [token]);
 
     const {
         isMutating: loading,
         error,
         trigger: doLogin,
-    } = useSWRMutation("users/login", api.post);
+    } = useSWRMutation("klanten/login", api.post); // 👈 8
 
     // 👇 6
     const login = useCallback(
         async (email, password) => {
             try {
-                const { token, user } = await doLogin({
+                // 👇 7
+                const { token, klant } = await doLogin({
                     email,
                     password,
                 });
 
-                setToken(token);
-                setUser(user);
+                setToken(token); // 👈 8
+                setKlant(klant); // 👈 8
 
-                localStorage.setItem(JWT_TOKEN_KEY, token);
-                localStorage.setItem(USER_ID_KEY, user.id);
-                localStorage.setItem("user", JSON.stringify(user));
+                localStorage.setItem(JWT_TOKEN_KEY, token); // 👈 13
+                localStorage.setItem(KLANT_ID_KEY, klant.id); // 👈 13
+                localStorage.setItem("klant", JSON.stringify(klant)); // 👈 13
 
-                return true;
+                return true; // 👈 10
+                // 👇 10
             } catch (error) {
                 console.error(error);
                 return false;
@@ -59,19 +61,21 @@ export const AuthProvider = ({ children }) => {
         [doLogin]
     );
 
+    // 👇 11
     const logout = useCallback(() => {
         setToken(null);
-        setUser(null);
+        setKlant(null);
 
         localStorage.removeItem(JWT_TOKEN_KEY);
-        localStorage.removeItem(USER_ID_KEY);
-        localStorage.removeItem("user");
+        localStorage.removeItem(KLANT_ID_KEY);
+        localStorage.removeItem("klant");
     }, []);
 
+    // 👇 5 en 9 en 12
     const value = useMemo(
         () => ({
             token,
-            user,
+            klant,
             error,
             ready,
             loading,
@@ -79,9 +83,10 @@ export const AuthProvider = ({ children }) => {
             login,
             logout,
         }),
-        [token, user, error, ready, loading, isAuthed, login, logout]
+        [token, klant, error, ready, loading, isAuthed, login, logout]
     );
 
+    // 👇 3
     return (
         <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     );

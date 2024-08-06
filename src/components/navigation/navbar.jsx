@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
     Box,
     Flex,
@@ -16,18 +16,10 @@ import logo from "../../assets/logo site.png";
 import { useAuth } from "../../context/auth-context";
 
 const Navbar = () => {
-    const [userRole, setUserRole] = useState("Guest");
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { isAuthed, logout } = useAuth();
-
-    useEffect(() => {
-        const fetchUserRole = async () => {
-            const role = await fetchUserRoleFromDatabase();
-            setUserRole(role);
-        };
-        fetchUserRole();
-    }, []);
+    const { isAuthed, klant, logout } = useAuth();
+    const userRole = klant ? klant.role : "Klant";
 
     return (
         <Container maxW="1280px">
@@ -57,6 +49,7 @@ const Navbar = () => {
                     </Flex>
                     <AuthControls
                         isAuthed={isAuthed}
+                        klant={klant}
                         logout={logout}
                         toggleColorMode={toggleColorMode}
                         colorMode={colorMode}
@@ -68,9 +61,5 @@ const Navbar = () => {
         </Container>
     );
 };
-
-async function fetchUserRoleFromDatabase() {
-    return "Klant";
-}
 
 export default Navbar;
