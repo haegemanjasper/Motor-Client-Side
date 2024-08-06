@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
     Box,
-    Stack,
+    Button,
+    Checkbox,
     FormControl,
     FormLabel,
     Input,
-    Checkbox,
-    Button,
+    Stack,
     Text,
     HStack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const validationRules = {
     email: {
@@ -21,12 +23,34 @@ const validationRules = {
     },
 };
 
-const LoginForm = ({ handleLogin, errors, isLoading, loginError }) => {
+const LoginForm = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
-        formState: { errors: formErrors },
+        formState: { errors },
     } = useForm();
+    const [loginError, setLoginError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleLogin = useCallback(
+        async (formData) => {
+            setIsLoading(true);
+            const { email, password } = formData;
+            const loggedIn = await login(email, password);
+
+            if (loggedIn) {
+                navigate({
+                    pathname: "/",
+                    replace: true,
+                });
+            } else {
+                setLoginError("Incorrect email or password.");
+            }
+        },
+        [login, navigate]
+    );
 
     return (
         <Box
@@ -54,9 +78,7 @@ const LoginForm = ({ handleLogin, errors, isLoading, loginError }) => {
             <form onSubmit={handleSubmit(handleLogin)}>
                 <Stack spacing="6">
                     <Stack spacing="5">
-                        <FormControl
-                            isInvalid={formErrors.email || errors.email}
-                        >
+                        <FormControl isInvalid={errors.email}>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <Input
                                 id="email"
@@ -66,15 +88,13 @@ const LoginForm = ({ handleLogin, errors, isLoading, loginError }) => {
                                 })}
                                 tabIndex={1}
                             />
-                            {(formErrors.email || errors.email) && (
+                            {errors.email && (
                                 <Text color="red">
                                     {validationRules.email.required}
                                 </Text>
                             )}
                         </FormControl>
-                        <FormControl
-                            isInvalid={formErrors.password || errors.password}
-                        >
+                        <FormControl isInvalid={errors.password}>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <Input
                                 id="password"
@@ -84,7 +104,7 @@ const LoginForm = ({ handleLogin, errors, isLoading, loginError }) => {
                                 })}
                                 tabIndex={2}
                             />
-                            {(formErrors.password || errors.password) && (
+                            {errors.password && (
                                 <Text color="red">
                                     {validationRules.password.required}
                                 </Text>
