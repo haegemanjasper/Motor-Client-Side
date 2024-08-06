@@ -1,19 +1,11 @@
 import React from "react";
-import { Box, useColorModeValue, Stack, HStack } from "@chakra-ui/react";
-
-const Links = [
-    { text: "Home", link: "/", roles: ["Klant", "Admin", "Guest"] },
-    { text: "About Us", link: "/aboutus", roles: ["Klant", "Admin", "Guest"] },
-    {
-        text: "Rent A Bike",
-        link: "/rentabike",
-        roles: ["Klant", "Admin", "Guest"],
-    },
-];
+import { HStack, Box } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import { useColorModeValue } from "@chakra-ui/react";
 
 const NavLink = ({ children, link }) => (
     <Box
-        as="a"
+        as={RouterLink}
         px={2}
         py={1}
         rounded={"md"}
@@ -21,42 +13,21 @@ const NavLink = ({ children, link }) => (
             textDecoration: "none",
             bg: useColorModeValue("gray.200", "gray.700"),
         }}
-        href={link}
+        to={link}
         textAlign="center"
     >
         {children}
     </Box>
 );
 
-const NavLinks = ({ userRole, isOpen }) => {
-    const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
-
-    return (
-        <>
-            <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-            >
-                {filteredLinks.map(({ text, link }) => (
-                    <NavLink key={text} link={link}>
-                        {text}
-                    </NavLink>
-                ))}
-            </HStack>
-            {isOpen && (
-                <Box pb={4} display={{ md: "none" }}>
-                    <Stack as={"nav"} spacing={4}>
-                        {filteredLinks.map(({ text, link }) => (
-                            <NavLink key={text} link={link}>
-                                {text}
-                            </NavLink>
-                        ))}
-                    </Stack>
-                </Box>
-            )}
-        </>
-    );
-};
+const NavLinks = ({ filteredLinks }) => (
+    <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
+        {filteredLinks.map((item) => (
+            <NavLink key={item.text} link={item.link}>
+                {item.text}
+            </NavLink>
+        ))}
+    </HStack>
+);
 
 export default NavLinks;

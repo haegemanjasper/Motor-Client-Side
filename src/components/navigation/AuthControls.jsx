@@ -1,85 +1,61 @@
 import React from "react";
 import {
-    HStack,
+    Flex,
     Button,
     Text,
+    HStack,
     Avatar,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
     MenuDivider,
-    useColorMode,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/auth-context";
+import { useColorMode } from "@chakra-ui/react";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-const AuthControls = () => {
-    const { isAuthed, klant, logout } = useAuth();
+const AuthControls = ({ isAuthed, logout, toggleColorMode, userName }) => {
+    const { colorMode } = useColorMode();
     const navigate = useNavigate();
-    const { colorMode, toggleColorMode } = useColorMode();
 
-    const handleLogin = () => navigate("/login");
-    const handleRegister = () => navigate("/register");
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    };
 
-    return (
+    return isAuthed ? (
+        <Flex alignItems={"center"} ml={4}>
+            <Menu>
+                <MenuButton>
+                    <Avatar size="sm" name={userName || "User"} />
+                </MenuButton>
+                <MenuList>
+                    <MenuItem as={RouterLink} to="/profile">
+                        Account
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>{" "}
+                </MenuList>
+            </Menu>
+            <Button onClick={toggleColorMode} ml={4}>
+                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            </Button>
+        </Flex>
+    ) : (
         <HStack spacing={4}>
-            {isAuthed ? (
-                <Menu>
-                    <MenuButton>
-                        <Avatar
-                            size="sm"
-                            name={klant ? klant.naam : "User"}
-                            src={
-                                klant && klant.avatarUrl
-                                    ? klant.avatarUrl
-                                    : undefined
-                            }
-                        />
-                    </MenuButton>
-                    <MenuList>
-                        <MenuItem onClick={() => navigate("/profile")}>
-                            Profile
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem onClick={logout}>Logout</MenuItem>
-                    </MenuList>
-                </Menu>
-            ) : (
-                <>
-                    <Button
-                        colorScheme="green"
-                        variant="outline"
-                        width="100%"
-                        textAlign="center"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        onClick={handleLogin}
-                    >
-                        <Text marginTop={3}>Log in</Text>
-                    </Button>
-                    <Button
-                        colorScheme="green"
-                        width="100%"
-                        textAlign="center"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        onClick={handleRegister}
-                    >
-                        <Text marginTop={3}>Sign up</Text>
-                    </Button>
-                </>
-            )}
-            <Button
-                onClick={toggleColorMode}
-                width="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-            >
+            <ChakraLink href="/login">
+                <Button colorScheme="blue">
+                    <Text>Log in</Text>
+                </Button>
+            </ChakraLink>
+            <ChakraLink href="/register">
+                <Button colorScheme="blue" variant="outline">
+                    <Text>Sign up</Text>
+                </Button>
+            </ChakraLink>
+            <Button onClick={toggleColorMode} ml={4}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
         </HStack>
