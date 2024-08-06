@@ -112,7 +112,7 @@ const LoginForm = () => {
                         </FormControl>
                     </Stack>
                     <HStack justify="space-between">
-                        <Checkbox defaultChecked colorScheme="green">
+                        <Checkbox defaultChecked colorScheme="blue">
                             Remember me
                         </Checkbox>
                         <Button variant="ghost" size="sm" colorScheme="red">
@@ -121,7 +121,7 @@ const LoginForm = () => {
                     </HStack>
                     <Stack spacing="6">
                         <Button
-                            colorScheme="green"
+                            colorScheme="blue"
                             type="submit"
                             isLoading={isLoading}
                         >

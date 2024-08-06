@@ -30,11 +30,9 @@ const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isAuthed, klant, logout } = useAuth();
 
-    // Zorg ervoor dat klant een geldige waarde heeft voordat je toegang krijgt tot klant.role
     const userRole =
         isAuthed && klant && klant.role ? klant.role.toLowerCase() : "guest";
 
-    // Filter de links op basis van de rol van de gebruiker
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 
     return (

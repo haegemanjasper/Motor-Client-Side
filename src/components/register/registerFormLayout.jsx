@@ -121,7 +121,7 @@ const RegisterFormLayout = ({
 
                         <Button
                             mt={4}
-                            colorScheme="green"
+                            colorScheme="blue"
                             type="submit"
                             width="100%"
                         >
