@@ -1,10 +1,10 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import logo from "../../assets/logo site.png";
 
-const Logo = () => (
-    <Box>
-        <img src={logo} alt="Logo" height="50px" width="75px" />
+const Logo = (props) => (
+    <Box {...props} display="flex" justifyContent="center" alignItems="center">
+        <Image src={logo} alt="Logo" height="75px" width="75px" />
     </Box>
 );
 

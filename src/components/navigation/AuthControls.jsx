@@ -9,13 +9,16 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
-    VStack,
+    useColorMode,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
 
-const AuthControls = ({ isAuthed, logout, toggleColorMode, colorMode }) => {
+const AuthControls = () => {
+    const { isAuthed, klant, logout } = useAuth();
     const navigate = useNavigate();
+    const { colorMode, toggleColorMode } = useColorMode();
 
     const handleLogin = () => navigate("/login");
     const handleRegister = () => navigate("/register");
@@ -25,11 +28,19 @@ const AuthControls = ({ isAuthed, logout, toggleColorMode, colorMode }) => {
             {isAuthed ? (
                 <Menu>
                     <MenuButton>
-                        <Avatar size="sm" name="pedro" />
+                        <Avatar
+                            size="sm"
+                            name={klant ? klant.naam : "User"}
+                            src={
+                                klant && klant.avatarUrl
+                                    ? klant.avatarUrl
+                                    : undefined
+                            }
+                        />
                     </MenuButton>
                     <MenuList>
                         <MenuItem onClick={() => navigate("/profile")}>
-                            Account
+                            Profile
                         </MenuItem>
                         <MenuDivider />
                         <MenuItem onClick={logout}>Logout</MenuItem>
@@ -60,17 +71,17 @@ const AuthControls = ({ isAuthed, logout, toggleColorMode, colorMode }) => {
                     >
                         <Text marginTop={3}>Sign up</Text>
                     </Button>
-                    <Button
-                        onClick={toggleColorMode}
-                        width="100%"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                    </Button>
                 </>
             )}
+            <Button
+                onClick={toggleColorMode}
+                width="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            </Button>
         </HStack>
     );
 };

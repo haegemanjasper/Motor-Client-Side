@@ -30,7 +30,6 @@ const LoginContainer = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-
                     login(data.token);
                     navigate({ pathname: "/", replace: true });
                 } else {
@@ -54,14 +53,8 @@ const LoginContainer = () => {
     return (
         <Container
             maxW="lg"
-            py={{
-                base: "12",
-                md: "12",
-            }}
-            px={{
-                base: "0",
-                sm: "8",
-            }}
+            py={{ base: "12", md: "12" }}
+            px={{ base: "0", sm: "8" }}
         >
             <Stack spacing="8">
                 <LoginHeader />

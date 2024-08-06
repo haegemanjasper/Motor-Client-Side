@@ -2,10 +2,13 @@ import React from "react";
 import { Box, useColorModeValue, Stack, HStack } from "@chakra-ui/react";
 
 const Links = [
-    { text: "Home", link: "/", roles: ["Klant", "Admin"] },
-    { text: "About Us", link: "/aboutus", roles: ["Klant", "Admin"] },
-    { text: "Rent A Bike", link: "/rentabike", roles: ["Klant", "Admin"] },
-    { text: "Dashboard", link: "/dashboard", roles: ["Admin"] },
+    { text: "Home", link: "/", roles: ["Klant", "Admin", "Guest"] },
+    { text: "About Us", link: "/aboutus", roles: ["Klant", "Admin", "Guest"] },
+    {
+        text: "Rent A Bike",
+        link: "/rentabike",
+        roles: ["Klant", "Admin", "Guest"],
+    },
 ];
 
 const NavLink = ({ children, link }) => (
