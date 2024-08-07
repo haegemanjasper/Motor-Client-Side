@@ -50,8 +50,8 @@ const RegisterFormLayout = ({
 
                         <FormInput
                             id="voornaam"
-                            label="First name"
-                            placeholder="First name"
+                            label="First Name"
+                            placeholder="First Name"
                             value={formData.voornaam}
                             onChange={handleChange}
                             error={errors.voornaam}

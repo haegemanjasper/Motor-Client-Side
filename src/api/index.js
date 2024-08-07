@@ -39,6 +39,10 @@ export const post = async (url, { arg }) => {
 
 export const get = async (url) => {
     const { data } = await axios.get(url);
+    return data;
+};
 
+export const updateProfile = async (klantId, profileData) => {
+    const { data } = await axios.put(`/klanten/${klantId}`, profileData);
     return data;
 };

@@ -71,7 +71,6 @@ export default function RegisterForm() {
                 password: "",
             });
 
-            // Redirect to login page after a short delay
             setTimeout(() => {
                 navigate("/login");
             }, 2000);

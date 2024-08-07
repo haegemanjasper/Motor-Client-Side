@@ -15,10 +15,11 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-// 👇 2
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem(JWT_TOKEN_KEY));
-    const [klant, setKlant] = useState(localStorage.getItem("klant"));
+    const [klant, setKlant] = useState(
+        JSON.parse(localStorage.getItem("klant"))
+    );
     const [ready, setReady] = useState(false);
     const [isAuthed, setIsAuthed] = useState(false);
 
@@ -34,15 +35,10 @@ export const AuthProvider = ({ children }) => {
         trigger: doLogin,
     } = useSWRMutation("klanten/login", api.post);
 
-    // 👇 6
     const login = useCallback(
         async (email, password) => {
             try {
-                // 👇 7
-                const { token, klant } = await doLogin({
-                    email,
-                    password,
-                });
+                const { token, klant } = await doLogin({ email, password });
 
                 setToken(token);
                 setKlant(klant);
@@ -69,6 +65,21 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("klant");
     }, []);
 
+    // Function to update profile information
+    const updateProfile = useCallback(async (klantId, profileData) => {
+        try {
+            const updatedKlant = await api.updateProfile(klantId, profileData);
+
+            setKlant(updatedKlant);
+            localStorage.setItem("klant", JSON.stringify(updatedKlant));
+
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }, []);
+
     const value = useMemo(
         () => ({
             token,
@@ -79,8 +90,19 @@ export const AuthProvider = ({ children }) => {
             isAuthed,
             login,
             logout,
+            updateProfile,
         }),
-        [token, klant, error, ready, loading, isAuthed, login, logout]
+        [
+            token,
+            klant,
+            error,
+            ready,
+            loading,
+            isAuthed,
+            login,
+            logout,
+            updateProfile,
+        ]
     );
 
     return (
