@@ -1,34 +1,34 @@
-import product1 from "./assets/bmw1.png";
-import product2 from "./assets/HarleyD1.png";
-import product3 from "./assets/kawa1.png";
-import product4 from "./assets/Yamaha1.png";
-import product5 from "./assets/honda1.png";
+import foto1 from "./assets/bmw.png";
+import foto2 from "./assets/harley.png";
+import foto3 from "./assets/honda.png";
+import foto4 from "./assets/kawa.png";
+import foto5 from "./assets/yamaha.png";
 
 export const PRODUCTS = [
     {
         id: 1,
         productName: "bmw",
         price: 100.0,
-        productImage: product1,
+        productImage: foto1,
     },
     {
         id: 2,
         productName: "harley",
         price: 100.0,
-        productImage: product2,
+        productImage: foto2,
     },
     {
         id: 3,
         productName: "kawa",
         price: 100.0,
-        productImage: product3,
+        productImage: foto3,
     },
     {
         id: 4,
         productName: "yamaha",
         price: 100.0,
-        productImage: product4,
+        productImage: foto4,
     },
 
-    { id: 5, productName: "Honda", price: 100.0, productImage: product5 },
+    { id: 5, productName: "Honda", price: 100.0, productImage: foto5 },
 ];

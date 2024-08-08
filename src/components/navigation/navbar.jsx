@@ -19,11 +19,11 @@ const Links = [
     { text: "Home", link: "/", roles: ["klant", "admin", "guest"] },
     { text: "About Us", link: "/aboutus", roles: ["klant", "admin", "guest"] },
     {
-        text: "Rent A Bike",
+        text: "Motorcycle Rentals",
         link: "/rentabike",
-        roles: ["klant", "admin", "guest"],
+        roles: ["guest"],
     },
-    { text: "Shop", link: "/shop", roles: ["klant", "admin"] },
+    { text: "Motorcycle Rentals", link: "/shop", roles: ["klant", "admin"] },
     { text: "Cart", link: "/cart", roles: ["klant", "admin"] },
 ];
 
@@ -32,13 +32,11 @@ const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isAuthed, klant, logout } = useAuth();
 
-    // Haal de eerste rol op uit het 'roles' array of gebruik 'guest' als geen rol aanwezig is
     const userRole =
         isAuthed && klant && klant.roles.length > 0
             ? klant.roles[0].toLowerCase()
             : "guest";
 
-    // Filter de navigatielinks op basis van de rol van de gebruiker
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 
     console.log("User Role:", userRole);
