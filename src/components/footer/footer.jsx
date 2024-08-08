@@ -7,15 +7,11 @@ export default function Footer() {
             bg="#2a70b2"
             borderTopWidth={1}
             borderTopColor="black"
-            p={2}
-            position="fixed"
-            bottom={0}
+            p={4}
             width="100%"
-            justifyContent="center"
-            transp
         >
             <Center>
-                <Text>
+                <Text color="white">
                     &copy; 2024 Jasper's first motorsite. All rights reserved.
                 </Text>
             </Center>

@@ -8,7 +8,6 @@ import { AuthProvider } from "./context/auth-context.jsx";
 import theme from "./theme.js";
 import Home from "./pages/home.jsx";
 import Root from "./root.jsx";
-import Footer from "./components/footer/footer.jsx";
 import Register from "./pages/register.jsx";
 import Login from "./pages/login.jsx";
 import AboutUs from "./pages/aboutus.jsx";
@@ -45,7 +44,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ChakraProvider theme={theme}>
                 <ShopContextProvider>
                     <RouterProvider router={router} />
-                    <Footer />
                 </ShopContextProvider>
             </ChakraProvider>
         </AuthProvider>
