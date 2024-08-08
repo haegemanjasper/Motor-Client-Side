@@ -1,7 +1,6 @@
 import React from "react";
-import { Box, Image, IconButton } from "@chakra-ui/react";
+import { Box, Image, Text, Stack } from "@chakra-ui/react";
 import { Carousel } from "react-responsive-carousel";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import bannerFoto1 from "../../assets/bannerFoto1.png";
 import bannerFoto2 from "../../assets/bannerFoto2.png";
@@ -9,95 +8,102 @@ import bannerFoto3 from "../../assets/bannerFoto3.png";
 import bannerFoto4 from "../../assets/bannerFoto4.png";
 import bannerFoto5 from "../../assets/bannerFoto5.png";
 
-export default function CustomCarousel() {
-    const imageStyle = {
+const carouselImages = [
+    {
+        src: bannerFoto1,
+        alt: "Banner 1",
+        title: "Explore the Best Bikes",
+        description: "Find your perfect ride today!",
+    },
+    {
+        src: bannerFoto2,
+        alt: "Banner 2",
+        title: "Adventure Awaits",
+        description: "Discover new roads and adventures.",
+    },
+    {
+        src: bannerFoto3,
+        alt: "Banner 3",
+        title: "Ultimate Performance",
+        description: "Top performance and style.",
+    },
+    {
+        src: bannerFoto4,
+        alt: "Banner 4",
+        title: "Ride with Confidence",
+        description: "Unmatched reliability and power.",
+    },
+    {
+        src: bannerFoto5,
+        alt: "Banner 5",
+        title: "Experience the Thrill",
+        description: "Feel the excitement of the ride.",
+    },
+];
+
+const CustomCarousel = () => {
+    const imageContainerStyle = {
         width: "100%",
-        height: "50%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+    };
+
+    const imageStyle = {
+        maxWidth: "100%",
+        maxHeight: "100%",
         objectFit: "cover",
     };
 
-    const arrowStyles = {
-        position: "absolute",
-        zIndex: 2,
-        top: "calc(50% - 15px)",
-        width: 30,
-        height: 30,
-        cursor: "pointer",
-        backgroundColor: "rgba(128, 128, 128, 0.5)",
-        color: "#ffffff",
-    };
-
-    const ArrowPrev = ({ onClickHandler, hasPrev, label }) =>
-        hasPrev && (
-            <IconButton
-                icon={<ChevronLeftIcon />}
-                onClick={onClickHandler}
-                aria-label={label}
-                style={{ ...arrowStyles, left: 15 }}
-            />
-        );
-
-    const ArrowNext = ({ onClickHandler, hasNext, label }) =>
-        hasNext && (
-            <IconButton
-                icon={<ChevronRightIcon />}
-                onClick={onClickHandler}
-                aria-label={label}
-                style={{ ...arrowStyles, right: 15 }}
-            />
-        );
-
     return (
-        <Box width="100%" mx="auto">
-            <Box borderRadius="lg" overflow="hidden">
-                <Carousel
-                    showStatus={false}
-                    infiniteLoop={true}
-                    swipeable={false}
-                    emulateTouch={false}
-                    showThumbs={false}
-                    dynamicHeight={true}
-                    renderArrowPrev={ArrowPrev}
-                    renderArrowNext={ArrowNext}
-                    interval={5000}
-                >
-                    <Box style={{ width: "100%", height: "100%" }}>
-                        <Image
-                            style={imageStyle}
-                            src={bannerFoto1}
-                            alt="Image 1"
-                        />
+        <Box width="100%" position="relative" overflow="hidden">
+            <Carousel
+                showStatus={false}
+                infiniteLoop={true}
+                swipeable={true}
+                emulateTouch={true}
+                showThumbs={false}
+                dynamicHeight={false}
+                interval={5000} // Auto-play interval set to 5 seconds
+                autoPlay={true}
+                stopOnHover={true}
+                transitionTime={500}
+            >
+                {carouselImages.map((image, index) => (
+                    <Box key={index} position="relative" height="400px">
+                        {" "}
+                        {/* Fixed height for carousel */}
+                        <Box style={imageContainerStyle}>
+                            <Image
+                                style={imageStyle}
+                                src={image.src}
+                                alt={image.alt}
+                            />
+                        </Box>
+                        <Box
+                            position="absolute"
+                            bottom="0"
+                            left="0"
+                            width="100%"
+                            background="rgba(0, 0, 0, 0.5)"
+                            color="white"
+                            p={5}
+                            textAlign="center"
+                        >
+                            <Stack spacing={3}>
+                                <Text fontSize="2xl" fontWeight="bold">
+                                    {image.title}
+                                </Text>
+                                <Text fontSize="lg">{image.description}</Text>
+                            </Stack>
+                        </Box>
                     </Box>
-                    <Box style={{ width: "100%", height: "100%" }}>
-                        <Image
-                            style={imageStyle}
-                            src={bannerFoto2}
-                            alt="Image 2"
-                        />
-                    </Box>
-                    <Box style={{ width: "100%", height: "100%" }}>
-                        <Image
-                            style={imageStyle}
-                            src={bannerFoto3}
-                            alt="Image 3"
-                        />
-                    </Box>
-                    <Box style={{ width: "100%", height: "100%" }}>
-                        <Image
-                            style={imageStyle}
-                            src={bannerFoto4}
-                            alt="Image 4"
-                        />
-                    </Box>
-                    <Box style={{ width: "100%", height: "100%" }}>
-                        <Image
-                            style={imageStyle}
-                            src={bannerFoto5}
-                            alt="Image 5"
-                        />
-                    </Box>
-                </Carousel>
-            </Box>
+                ))}
+            </Carousel>
         </Box>
     );
-}
+};
+
+export default CustomCarousel;

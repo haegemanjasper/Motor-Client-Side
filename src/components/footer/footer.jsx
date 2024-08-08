@@ -4,7 +4,7 @@ export default function Footer() {
     return (
         <Box
             as="footer"
-            bg="#516845"
+            bg="#2a70b2"
             borderTopWidth={1}
             borderTopColor="black"
             p={2}
@@ -12,6 +12,7 @@ export default function Footer() {
             bottom={0}
             width="100%"
             justifyContent="center"
+            transp
         >
             <Center>
                 <Text>
