@@ -19,10 +19,12 @@ const Links = [
     { text: "Home", link: "/", roles: ["klant", "admin", "guest"] },
     { text: "About Us", link: "/aboutus", roles: ["klant", "admin", "guest"] },
     {
-        text: "Rent A Bike",
+        text: "Motorcycle Rentals",
         link: "/rentabike",
-        roles: ["klant", "admin", "guest"],
+        roles: ["guest"],
     },
+    { text: "Motorcycle Rentals", link: "/shop", roles: ["klant", "admin"] },
+    { text: "Cart", link: "/cart", roles: ["klant", "admin"] },
 ];
 
 const Navbar = () => {
@@ -31,9 +33,14 @@ const Navbar = () => {
     const { isAuthed, klant, logout } = useAuth();
 
     const userRole =
-        isAuthed && klant && klant.role ? klant.role.toLowerCase() : "guest";
+        isAuthed && klant && klant.roles.length > 0
+            ? klant.roles[0].toLowerCase()
+            : "guest";
 
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
+
+    console.log("User Role:", userRole);
+    console.log("Filtered Links:", filteredLinks);
 
     return (
         <>

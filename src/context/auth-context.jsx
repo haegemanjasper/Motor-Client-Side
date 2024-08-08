@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthed, setIsAuthed] = useState(false);
 
     useEffect(() => {
+        console.log("Klant bij herladen:", klant);
         api.setAuthToken(token);
         setIsAuthed(Boolean(token));
         setReady(true);
@@ -39,6 +40,8 @@ export const AuthProvider = ({ children }) => {
         async (email, password) => {
             try {
                 const { token, klant } = await doLogin({ email, password });
+
+                console.log("Klant Info na inloggen:", klant);
 
                 setToken(token);
                 setKlant(klant);
