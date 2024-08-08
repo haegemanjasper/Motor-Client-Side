@@ -23,6 +23,8 @@ const Links = [
         link: "/rentabike",
         roles: ["klant", "admin", "guest"],
     },
+    { text: "Shop", link: "/shop", roles: ["klant", "admin"] },
+    { text: "Cart", link: "/cart", roles: ["klant", "admin"] },
 ];
 
 const Navbar = () => {
@@ -30,10 +32,17 @@ const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isAuthed, klant, logout } = useAuth();
 
+    // Haal de eerste rol op uit het 'roles' array of gebruik 'guest' als geen rol aanwezig is
     const userRole =
-        isAuthed && klant && klant.role ? klant.role.toLowerCase() : "guest";
+        isAuthed && klant && klant.roles.length > 0
+            ? klant.roles[0].toLowerCase()
+            : "guest";
 
+    // Filter de navigatielinks op basis van de rol van de gebruiker
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
+
+    console.log("User Role:", userRole);
+    console.log("Filtered Links:", filteredLinks);
 
     return (
         <>
