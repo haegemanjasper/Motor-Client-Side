@@ -66,7 +66,7 @@ const CustomCarousel = () => {
                 emulateTouch={true}
                 showThumbs={false}
                 dynamicHeight={false}
-                interval={5000} // Auto-play interval set to 5 seconds
+                interval={5000}
                 autoPlay={true}
                 stopOnHover={true}
                 transitionTime={500}
@@ -74,7 +74,6 @@ const CustomCarousel = () => {
                 {carouselImages.map((image, index) => (
                     <Box key={index} position="relative" height="400px">
                         {" "}
-                        {/* Fixed height for carousel */}
                         <Box style={imageContainerStyle}>
                             <Image
                                 style={imageStyle}
