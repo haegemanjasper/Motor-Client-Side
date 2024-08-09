@@ -1,20 +1,21 @@
+// CartSummary.jsx
 import React, { useContext } from "react";
 import { Box, Image, Text, VStack, HStack, Divider } from "@chakra-ui/react";
 import { ShopContext } from "../../context/shop-context";
-import { PRODUCTS } from "../../products";
 
 const CartSummary = () => {
-    const { cartItems } = useContext(ShopContext);
+    const { cartItems, motors } = useContext(ShopContext);
+
     const calculateTotal = () => {
         let total = 0;
         Object.keys(cartItems).forEach((itemId) => {
-            const product = PRODUCTS.find(
-                (product) => product.id === parseInt(itemId)
-            );
-            total += cartItems[itemId] * (product?.price || 0);
+            const motor = motors.find((motor) => motor.id === parseInt(itemId));
+            total += cartItems[itemId] * (motor?.huurprijs_per_dag || 0);
         });
         return total.toFixed(2);
     };
+
+    if (!motors.length) return <p>No motors available.</p>;
 
     return (
         <Box
@@ -30,10 +31,10 @@ const CartSummary = () => {
             </Text>
             <VStack divider={<Divider />} spacing={4}>
                 {Object.keys(cartItems).map((itemId) => {
-                    const product = PRODUCTS.find(
-                        (product) => product.id === parseInt(itemId)
+                    const motor = motors.find(
+                        (motor) => motor.id === parseInt(itemId)
                     );
-                    if (!product || cartItems[itemId] <= 0) return null;
+                    if (!motor || cartItems[itemId] <= 0) return null;
                     return (
                         <HStack
                             key={itemId}
@@ -43,13 +44,15 @@ const CartSummary = () => {
                             <Image
                                 boxSize="50px"
                                 objectFit="cover"
-                                src={product.productImage}
-                                alt={product.productName}
+                                src={motor.image}
+                                alt={motor.merk}
                             />
-                            <Text>{product.productName}</Text>
+                            <Text>{motor.model}</Text>
                             <Text fontWeight="bold">
                                 €
-                                {(cartItems[itemId] * product.price).toFixed(2)}
+                                {(
+                                    cartItems[itemId] * motor.huurprijs_per_dag
+                                ).toFixed(2)}
                             </Text>
                         </HStack>
                     );
@@ -57,7 +60,7 @@ const CartSummary = () => {
             </VStack>
             <Divider my="4" />
             <Text fontSize="xl" fontWeight="bold">
-                Total: € {calculateTotal()}
+                Total: €{calculateTotal()}
             </Text>
         </Box>
     );

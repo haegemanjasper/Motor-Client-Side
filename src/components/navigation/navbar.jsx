@@ -33,12 +33,15 @@ const Navbar = () => {
     const { isAuthed, klant, logout } = useAuth();
 
     const userRole =
-        isAuthed && klant && klant.roles.length > 0
+        isAuthed && klant && klant.roles && klant.roles.length > 0
             ? klant.roles[0].toLowerCase()
             : "guest";
 
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 
+    console.log("User Role:", userRole);
+    console.log("Klant Roles:", klant?.roles);
+    console.log("Filtered Links:", filteredLinks);
     console.log("User Role:", userRole);
     console.log("Filtered Links:", filteredLinks);
 

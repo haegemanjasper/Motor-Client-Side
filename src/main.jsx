@@ -1,23 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
-import { AuthProvider } from "./context/auth-context.jsx";
-import theme from "./theme.js";
-import Home from "./pages/home.jsx";
-import Root from "./root.jsx";
-import Register from "./pages/register.jsx";
-import Login from "./pages/login.jsx";
-import AboutUs from "./pages/aboutus.jsx";
-import RentABike from "./pages/rentabike.jsx";
-import Profile from "./pages/profile.jsx";
-import { ShopContextProvider } from "./context/shop-context.jsx";
-import ConfirmationPage from "./components/shop/confirmationpage.jsx";
-import Shop from "./pages/shop.jsx";
-import Cart from "./pages/cart.jsx";
-import Checkout from "./pages/checkout.jsx";
+import { AuthProvider } from "./context/auth-context";
+import theme from "./theme";
+import Home from "./pages/home";
+import Shop from "./pages/shop";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
+import Register from "./pages/register";
+import Login from "./pages/login";
+import AboutUs from "./pages/aboutus";
+import RentABike from "./pages/rentabike";
+import Profile from "./pages/profile";
+import ConfirmationPage from "./components/shop/confirmationpage";
+import { ShopContextProvider } from "./context/shop-context";
+import Root from "./root";
 
 const router = createBrowserRouter([
     {
