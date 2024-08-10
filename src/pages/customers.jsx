@@ -12,15 +12,28 @@ import {
     Text,
     Alert,
     AlertIcon,
+    IconButton,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Button,
+    useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useAuth } from "../context/auth-context"; // Zorg ervoor dat dit pad klopt
+import { useAuth } from "../context/auth-context";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { token } = useAuth(); // Verkrijg de token uit je context
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const { token } = useAuth();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -33,9 +46,8 @@ const Customers = () => {
                         },
                     }
                 );
-                console.log("API Response:", response.data); // Log de response om te controleren
+                console.log("API Response:", response.data);
 
-                // Verwerk de respons correct
                 if (response.data && Array.isArray(response.data.items)) {
                     setCustomers(response.data.items);
                 } else {
@@ -44,7 +56,7 @@ const Customers = () => {
                     );
                 }
             } catch (err) {
-                console.error("Error fetching customers:", err); // Log volledige fout
+                console.error("Error fetching customers:", err);
                 setError("Failed to fetch customers. Please try again later.");
             } finally {
                 setLoading(false);
@@ -52,7 +64,37 @@ const Customers = () => {
         };
 
         fetchCustomers();
-    }, [token]); // Depend on token so it fetches again if token changes
+    }, [token]);
+
+    const handleDeleteCustomer = async () => {
+        if (!selectedCustomer) return;
+
+        try {
+            await axios.delete(
+                `http://localhost:9000/api/klanten/${selectedCustomer.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            // Filter out the deleted customer from the list
+            setCustomers(
+                customers.filter(
+                    (customer) => customer.id !== selectedCustomer.id
+                )
+            );
+            onClose(); // Close the modal after successful deletion
+        } catch (err) {
+            console.error("Error deleting customer:", err);
+            setError("Failed to delete customer. Please try again later.");
+        }
+    };
+
+    const openConfirmationModal = (customer) => {
+        setSelectedCustomer(customer);
+        onOpen();
+    };
 
     if (loading) {
         return (
@@ -88,6 +130,7 @@ const Customers = () => {
                             <Th>House Number</Th>
                             <Th>Postal Code</Th>
                             <Th>City</Th>
+                            <Th>Actions</Th> {/* New column for actions */}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -100,6 +143,16 @@ const Customers = () => {
                                 <Td>{customer.huisnummer}</Td>
                                 <Td>{customer.postcode}</Td>
                                 <Td>{customer.stad}</Td>
+                                <Td>
+                                    <IconButton
+                                        icon={<DeleteIcon />}
+                                        colorScheme="red"
+                                        aria-label="Delete customer"
+                                        onClick={() =>
+                                            openConfirmationModal(customer)
+                                        }
+                                    />
+                                </Td>
                             </Tr>
                         ))}
                     </Tbody>
@@ -107,6 +160,32 @@ const Customers = () => {
             ) : (
                 <Text>No customers found</Text>
             )}
+
+            {/* Confirmation Modal */}
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Confirm Deletion</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text>
+                            Are you sure you want to delete this customer?
+                        </Text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            colorScheme="red"
+                            mr={3}
+                            onClick={handleDeleteCustomer}
+                        >
+                            Delete
+                        </Button>
+                        <Button colorScheme="blue" onClick={onClose}>
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Box>
     );
 };

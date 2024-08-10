@@ -75,6 +75,20 @@ export const AuthProvider = ({ children }) => {
         return klant?.roles?.includes("admin");
     }, [klant]);
 
+    const updateProfile = useCallback(async (klantId, profileData) => {
+        try {
+            const updatedKlant = await api.updateProfile(klantId, profileData);
+
+            setKlant(updatedKlant);
+            localStorage.setItem("klant", JSON.stringify(updatedKlant));
+
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }, []);
+
     const value = useMemo(
         () => ({
             token,
@@ -86,8 +100,20 @@ export const AuthProvider = ({ children }) => {
             isAdmin,
             login,
             logout,
+            updateProfile,
         }),
-        [token, klant, error, ready, loading, isAuthed, isAdmin, login, logout]
+        [
+            token,
+            klant,
+            error,
+            ready,
+            loading,
+            isAuthed,
+            isAdmin,
+            login,
+            logout,
+            updateProfile,
+        ]
     );
 
     return (
