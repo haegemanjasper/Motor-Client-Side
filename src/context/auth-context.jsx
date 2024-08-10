@@ -1,10 +1,10 @@
 import {
     createContext,
     useState,
+    useEffect,
     useCallback,
     useMemo,
     useContext,
-    useEffect,
 } from "react";
 import useSWRMutation from "swr/mutation";
 import * as api from "../api";
@@ -68,21 +68,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem(KLANT_ID_KEY);
         localStorage.removeItem("klant");
 
-        api.setAuthToken(null); 
-    }, []);
-
-    const updateProfile = useCallback(async (klantId, profileData) => {
-        try {
-            const updatedKlant = await api.updateProfile(klantId, profileData);
-
-            setKlant(updatedKlant);
-            localStorage.setItem("klant", JSON.stringify(updatedKlant));
-
-            return true;
-        } catch (error) {
-            console.error("Update profile error:", error);
-            return false;
-        }
+        api.setAuthToken(null);
     }, []);
 
     const isAdmin = useMemo(() => {
@@ -100,20 +86,8 @@ export const AuthProvider = ({ children }) => {
             isAdmin,
             login,
             logout,
-            updateProfile,
         }),
-        [
-            token,
-            klant,
-            error,
-            ready,
-            loading,
-            isAuthed,
-            isAdmin,
-            login,
-            logout,
-            updateProfile,
-        ]
+        [token, klant, error, ready, loading, isAuthed, isAdmin, login, logout]
     );
 
     return (

@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useMemo } from "react";
+import { useAuth } from "../context/auth-context";
 
 export const ShopContext = createContext(null);
 
@@ -7,6 +8,8 @@ export const ShopContextProvider = ({ children }) => {
     const [motors, setMotors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { isAdmin } = useAuth();
 
     useEffect(() => {
         const fetchMotors = async () => {
@@ -98,9 +101,12 @@ export const ShopContextProvider = ({ children }) => {
     };
 
     const checkout = () => {
+        // Implement checkout logic
     };
 
     const deleteMotor = async (id) => {
+        if (!isAdmin) return;
+
         const authToken = localStorage.getItem("jwtToken");
         try {
             const response = await fetch(
@@ -123,7 +129,10 @@ export const ShopContextProvider = ({ children }) => {
             setError(err);
         }
     };
+
     const editMotor = async (id, updatedData) => {
+        if (!isAdmin) return;
+
         const authToken = localStorage.getItem("jwtToken");
 
         const { id: _id, ...formattedData } = updatedData;
@@ -153,7 +162,7 @@ export const ShopContextProvider = ({ children }) => {
             );
 
             if (!response.ok) {
-                const errorText = await response.text(); 
+                const errorText = await response.text();
                 throw new Error(
                     `Failed to update motor: ${response.statusText}. Details: ${errorText}`
                 );
@@ -165,6 +174,36 @@ export const ShopContextProvider = ({ children }) => {
             );
         } catch (err) {
             console.error("Error editing motor:", err);
+            setError(err);
+        }
+    };
+
+    const createMotor = async (motorData) => {
+        if (!isAdmin) return;
+
+        const authToken = localStorage.getItem("jwtToken");
+
+        try {
+            const response = await fetch("http://localhost:9000/api/motoren", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(motorData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(
+                    `Failed to create motor: ${response.statusText}. Details: ${errorText}`
+                );
+            }
+
+            const newMotor = await response.json();
+            setMotors((prev) => [...prev, newMotor]);
+        } catch (err) {
+            console.error("Error creating motor:", err);
             setError(err);
         }
     };
@@ -182,6 +221,7 @@ export const ShopContextProvider = ({ children }) => {
         error,
         deleteMotor,
         editMotor,
+        createMotor,
     };
 
     return (

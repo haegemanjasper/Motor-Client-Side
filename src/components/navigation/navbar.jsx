@@ -6,31 +6,31 @@ import {
     Stack,
     Divider,
     Container,
-    VStack,
+    Button,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDisclosure, useColorMode } from "@chakra-ui/react";
 import { useAuth } from "../../context/auth-context";
+import { useLocation } from "react-router-dom";
 import LogoComponent from "./Logo";
 import NavLinks from "./NavLinks";
 import AuthControls from "./AuthControls";
+import CreateMotorButton from "../motors/CreateMotorForm"; // Zorg ervoor dat dit pad klopt
 
 const Links = [
     { text: "Home", link: "/", roles: ["klant", "admin", "guest"] },
     { text: "About Us", link: "/aboutus", roles: ["klant", "admin", "guest"] },
-    {
-        text: "Motorcycle Rentals",
-        link: "/rentabike",
-        roles: ["guest"],
-    },
+    { text: "Motorcycle Rentals", link: "/rentabike", roles: ["guest"] },
     { text: "Motorcycle Rentals", link: "/shop", roles: ["klant", "admin"] },
-    { text: "Cart", link: "/cart", roles: ["klant", "admin"] },
+    { text: "Cart", link: "/cart", roles: ["klant"] },
+    { text: "Customers", link: "/viewcustomers", roles: ["admin"] },
 ];
 
 const Navbar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isAuthed, klant, logout } = useAuth();
+    const location = useLocation();
 
     const userRole =
         isAuthed && klant && klant.roles && klant.roles.length > 0
@@ -39,11 +39,7 @@ const Navbar = () => {
 
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 
-    console.log("User Role:", userRole);
-    console.log("Klant Roles:", klant?.roles);
-    console.log("Filtered Links:", filteredLinks);
-    console.log("User Role:", userRole);
-    console.log("Filtered Links:", filteredLinks);
+    const isOnShopPage = location.pathname === "/shop";
 
     return (
         <>
@@ -64,6 +60,7 @@ const Navbar = () => {
                         <Flex alignItems={"center"} spacing={8}>
                             <LogoComponent />
                             <NavLinks filteredLinks={filteredLinks} />
+                            {isOnShopPage && <CreateMotorButton />}
                         </Flex>
                         <AuthControls
                             isAuthed={isAuthed}
