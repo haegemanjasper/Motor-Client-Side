@@ -1,10 +1,10 @@
 import {
     createContext,
     useState,
+    useEffect,
     useCallback,
     useMemo,
     useContext,
-    useEffect,
 } from "react";
 import useSWRMutation from "swr/mutation";
 import * as api from "../api";
@@ -21,12 +21,11 @@ export const AuthProvider = ({ children }) => {
         JSON.parse(localStorage.getItem("klant"))
     );
     const [ready, setReady] = useState(false);
-    const [isAuthed, setIsAuthed] = useState(false);
+    const [isAuthed, setIsAuthed] = useState(!!token);
 
     useEffect(() => {
-        console.log("Klant bij herladen:", klant);
         api.setAuthToken(token);
-        setIsAuthed(Boolean(token));
+        setIsAuthed(!!token);
         setReady(true);
     }, [token]);
 
@@ -41,7 +40,9 @@ export const AuthProvider = ({ children }) => {
             try {
                 const { token, klant } = await doLogin({ email, password });
 
-                console.log("Klant Info na inloggen:", klant);
+                if (!token || !klant) {
+                    throw new Error("Invalid response data");
+                }
 
                 setToken(token);
                 setKlant(klant);
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
                 return true;
             } catch (error) {
-                console.error(error);
+                console.error("Login error:", error);
                 return false;
             }
         },
@@ -66,9 +67,14 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem(JWT_TOKEN_KEY);
         localStorage.removeItem(KLANT_ID_KEY);
         localStorage.removeItem("klant");
+
+        api.setAuthToken(null);
     }, []);
 
-    // Function to update profile information
+    const isAdmin = useMemo(() => {
+        return klant?.roles?.includes("admin");
+    }, [klant]);
+
     const updateProfile = useCallback(async (klantId, profileData) => {
         try {
             const updatedKlant = await api.updateProfile(klantId, profileData);
@@ -91,6 +97,7 @@ export const AuthProvider = ({ children }) => {
             ready,
             loading,
             isAuthed,
+            isAdmin,
             login,
             logout,
             updateProfile,
@@ -102,6 +109,7 @@ export const AuthProvider = ({ children }) => {
             ready,
             loading,
             isAuthed,
+            isAdmin,
             login,
             logout,
             updateProfile,
