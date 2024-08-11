@@ -41,14 +41,19 @@ const CartSummary = () => {
                             key={itemId}
                             width="100%"
                             justifyContent="space-between"
+                            spacing={4}
                         >
                             <Image
                                 boxSize="50px"
                                 objectFit="cover"
                                 src={imageSrc}
                                 alt={motor.model}
+                                borderRadius="md"
                             />
-                            <Text>{motor.model}</Text>
+                            <VStack align="start" spacing={0} ml={2}>
+                                <Text fontWeight="bold">{motor.merk}</Text>
+                                <Text>{motor.model}</Text>
+                            </VStack>
                             <Text fontWeight="bold">
                                 €
                                 {(
