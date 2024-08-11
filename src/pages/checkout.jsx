@@ -35,6 +35,7 @@ export default function Checkout() {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [totalAmount, setTotalAmount] = useState(0);
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -64,7 +65,6 @@ export default function Checkout() {
 
                 const data = await response.json();
 
-                // Assuming the data is an object with an `items` array
                 if (data && Array.isArray(data.items)) {
                     setLocations(data.items);
                 } else {
@@ -81,7 +81,11 @@ export default function Checkout() {
         fetchLocations();
     }, []);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        setTotalAmount(shopContext.getTotalCartAmount());
+    }, [shopContext]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setFormSubmitted(true);
 
@@ -89,10 +93,43 @@ export default function Checkout() {
             return;
         }
 
-        localStorage.setItem("userEmail", formData.email);
+        const authToken = localStorage.getItem("jwtToken");
 
-        navigate("/confirmation");
-        shopContext.clearCart();
+        if (!authToken) {
+            setError(new Error("No auth token found"));
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "http://localhost:9000/api/betalingen",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({
+                        bedrag: totalAmount,
+                        betaalmethode: formData.paymentMethod,
+                        datum: new Date().toISOString(),
+                        huurlocatieId: Number(formData.location),
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            navigate("/confirmation");
+            shopContext.clearCart();
+        } catch (error) {
+            setError(error);
+            console.error("Error submitting payment:", error);
+        }
     };
 
     const isFormValid = (formData) => {
@@ -152,7 +189,7 @@ export default function Checkout() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        placeholder="Jaak de Draak"
+                        placeholder="Jan Jansens"
                     />
                     <FormErrorMessage>
                         Please fill in this field
@@ -254,8 +291,8 @@ export default function Checkout() {
                 <FormControl mb="4" isInvalid={shouldShowError("email")}>
                     <FormLabel>Email</FormLabel>
                     <Input
-                        type="email"
                         name="email"
+                        type="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="example@example.com"
@@ -272,11 +309,11 @@ export default function Checkout() {
                         onChange={handleInputChange}
                     >
                         <option value="Visa">Visa</option>
-                        <option value="PayPal">PayPal</option>
                         <option value="Bancontact">Bancontact</option>
+                        <option value="PayPal">PayPal</option>
                     </Select>
                 </FormControl>
-                <FormControl mb="4">
+                <FormControl mb="4" isInvalid={shouldShowError("location")}>
                     <FormLabel>Location</FormLabel>
                     <Select
                         name="location"
@@ -284,20 +321,18 @@ export default function Checkout() {
                         onChange={handleInputChange}
                     >
                         <option value="">Select a location</option>
-                        {locations.length > 0 ? (
-                            locations.map((location) => (
-                                <option key={location.id} value={location.id}>
-                                    {location.naam}{" "}
-                                    {/* Corrected to use `naam` */}
-                                </option>
-                            ))
-                        ) : (
-                            <option disabled>Loading locations...</option>
-                        )}
+                        {locations.map((location) => (
+                            <option key={location.id} value={location.id}>
+                                {location.naam}
+                            </option>
+                        ))}
                     </Select>
+                    <FormErrorMessage>
+                        Please select a location
+                    </FormErrorMessage>
                 </FormControl>
-                <Button colorScheme="red" width="full" type="submit">
-                    Submit
+                <Button colorScheme="teal" type="submit">
+                    Pay {totalAmount.toFixed(2)} EUR
                 </Button>
             </Box>
             <CartSummary />

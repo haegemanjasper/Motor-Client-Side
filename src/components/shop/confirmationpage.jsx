@@ -53,7 +53,7 @@ const ConfirmationPage = () => {
                 Thank you for your order.
             </Text>
             <Text mb="8">A confirmation email has been sent to {email}.</Text>
-            <Button colorScheme="red" onClick={handleReturnHome}>
+            <Button colorScheme="blue" onClick={handleReturnHome}>
                 Return Home
             </Button>
         </Box>
