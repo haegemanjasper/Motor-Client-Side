@@ -1,63 +1,60 @@
 import React, { useContext } from "react";
 import { ShopContext } from "../../context/shop-context";
 import { Button, Input, Flex, Image, Text } from "@chakra-ui/react";
+import imageMap from "../../assets/imageMap";
 
-export const CartItem = (props) => {
-    const { id, productName, price, productImage } = props.data;
-    const { cartItems, addToCart, removeFromCart, updateCartItemCount } =
-        useContext(ShopContext);
+export const CartItem = ({ itemId }) => {
+    const {
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateCartItemCount,
+        motors,
+    } = useContext(ShopContext);
+
+    const motor = motors.find((motor) => motor.id === Number(itemId));
+    if (!motor) return <Text>Item not found</Text>;
+
+    const { model, huurprijs_per_dag, image } = motor;
+    const imageSrc = imageMap[motor.merk];
 
     return (
-        <Flex
-            direction={{ base: "column", md: "row" }}
-            align="center"
-            justify="space-between"
-            mb={4}
-        >
-            <Flex direction="column" align="center" flex={1}>
-                <Text fontWeight="bold" mb={2}>
-                    Item
-                </Text>
+        <Flex direction="row" align="center" justify="space-between" mb={4}>
+            <Flex direction="row" align="center" flex={1}>
                 <Image
-                    src={productImage}
-                    alt={productName}
                     boxSize="100px"
-                    mb={2}
+                    objectFit="cover"
+                    src={imageSrc}
+                    alt={model}
                 />
-                <Text fontWeight="bold" mb={1}>
-                    {productName}
-                </Text>
-                <Text mb={2}>Price: €{price.toFixed(2)}</Text>
+                <Text ml={4}>{model}</Text>
             </Flex>
-
-            <Flex direction="column" align="center" flex={1}>
-                <Text fontWeight="bold" mb={2}>
-                    Quantity
-                </Text>
-                <Flex align="center">
-                    <Button size="sm" onClick={() => removeFromCart(id)}>
-                        -
-                    </Button>
-                    <Input
-                        value={cartItems[id]}
-                        onChange={(e) =>
-                            updateCartItemCount(Number(e.target.value), id)
-                        }
-                        w="50px"
-                        mx={2}
-                        size="sm"
-                    />
-                    <Button size="sm" onClick={() => addToCart(id)}>
-                        +
-                    </Button>
-                </Flex>
+            <Flex direction="row" align="center" flex={1} justify="center">
+                <Button size="sm" onClick={() => removeFromCart(itemId)}>
+                    -
+                </Button>
+                <Input
+                    value={cartItems[itemId] || 0}
+                    onChange={(e) =>
+                        updateCartItemCount(Number(e.target.value), itemId)
+                    }
+                    w="50px"
+                    mx={2}
+                    size="sm"
+                    type="number"
+                    min="0"
+                />
+                <Button size="sm" onClick={() => addToCart(itemId)}>
+                    +
+                </Button>
             </Flex>
-
-            <Flex direction="column" align="center" flex={1}>
-                <Text fontWeight="bold" mb={2}>
-                    Total
+            <Flex direction="row" align="center" flex={1} justify="flex-end">
+                <Text>
+                    €
+                    {(
+                        (cartItems[itemId] || 0) * parseFloat(huurprijs_per_dag)
+                    ).toFixed(2)}
                 </Text>
-                <Text>€ {(cartItems[id] * price).toFixed(2)}</Text>
             </Flex>
         </Flex>
     );
