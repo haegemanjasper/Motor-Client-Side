@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 import LogoComponent from "./Logo";
 import NavLinks from "./NavLinks";
 import AuthControls from "./AuthControls";
-import CreateMotorButton from "../motors/CreateMotorForm"; // Zorg ervoor dat dit pad klopt
+import CreateMotorButton from "../motors/CreateMotorForm";
 
 const Links = [
     { text: "Home", link: "/", roles: ["klant", "admin", "guest"] },

@@ -17,6 +17,7 @@ import RentABike from "./pages/rentabike";
 import Customers from "./pages/customers";
 import Profile from "./pages/profile";
 import Payments from "./pages/payments";
+import Locations from "./pages/locations";
 import ConfirmationPage from "./components/shop/confirmationpage";
 import { ShopContextProvider } from "./context/shop-context";
 import Root from "./root";
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
             { path: "/profile", element: <Profile /> },
             { path: "/viewcustomers", element: <Customers /> },
             { path: "/viewpayments", element: <Payments /> },
+            { path: "/viewlocations", element: <Locations /> },
         ],
     },
 ]);
