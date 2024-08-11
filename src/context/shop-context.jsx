@@ -80,6 +80,18 @@ export const ShopContextProvider = ({ children }) => {
         }));
     };
 
+    const removeFromCart = (itemId) => {
+        setCartItems((prev) => {
+            const newCount = (prev[itemId] || 1) - 1;
+            if (newCount <= 0) {
+                const updatedCart = { ...prev };
+                delete updatedCart[itemId];
+                return updatedCart;
+            }
+            return { ...prev, [itemId]: newCount };
+        });
+    };
+
     const removeItemFromCart = (itemId) => {
         setCartItems((prev) => {
             const updatedCart = { ...prev };
@@ -203,6 +215,7 @@ export const ShopContextProvider = ({ children }) => {
         cartItems,
         addToCart,
         updateCartItemCount,
+        removeFromCart,
         removeItemFromCart,
         getTotalCartAmount,
         clearCart,

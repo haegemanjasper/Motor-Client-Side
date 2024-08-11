@@ -34,11 +34,7 @@ const CartSummary = () => {
                     );
                     if (!motor || (cartItems[itemId] || 0) <= 0) return null;
 
-                    // Verkrijg het juiste afbeeldingspad uit de imageMap
-                    const imageSrc =
-                        imageMap[motor.merk] ||
-                        motor.image ||
-                        "/path/to/default-image.jpg";
+                    const imageSrc = imageMap[motor.merk];
 
                     return (
                         <HStack
