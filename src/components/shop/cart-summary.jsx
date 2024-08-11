@@ -1,7 +1,7 @@
-// CartSummary.jsx
 import React, { useContext } from "react";
 import { Box, Image, Text, VStack, HStack, Divider } from "@chakra-ui/react";
 import { ShopContext } from "../../context/shop-context";
+import imageMap from "../../assets/imageMap";
 
 const CartSummary = () => {
     const { cartItems, motors } = useContext(ShopContext);
@@ -10,12 +10,10 @@ const CartSummary = () => {
         let total = 0;
         Object.keys(cartItems).forEach((itemId) => {
             const motor = motors.find((motor) => motor.id === parseInt(itemId));
-            total += cartItems[itemId] * (motor?.huurprijs_per_dag || 0);
+            total += (cartItems[itemId] || 0) * (motor?.huurprijs_per_dag || 0);
         });
         return total.toFixed(2);
     };
-
-    if (!motors.length) return <p>No motors available.</p>;
 
     return (
         <Box
@@ -34,7 +32,10 @@ const CartSummary = () => {
                     const motor = motors.find(
                         (motor) => motor.id === parseInt(itemId)
                     );
-                    if (!motor || cartItems[itemId] <= 0) return null;
+                    if (!motor || (cartItems[itemId] || 0) <= 0) return null;
+
+                    const imageSrc = imageMap[motor.merk];
+
                     return (
                         <HStack
                             key={itemId}
@@ -44,8 +45,8 @@ const CartSummary = () => {
                             <Image
                                 boxSize="50px"
                                 objectFit="cover"
-                                src={motor.image}
-                                alt={motor.merk}
+                                src={imageSrc}
+                                alt={motor.model}
                             />
                             <Text>{motor.model}</Text>
                             <Text fontWeight="bold">

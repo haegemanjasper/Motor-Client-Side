@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useMemo } from "react";
+import { createContext, useState, useEffect } from "react";
 import { useAuth } from "../context/auth-context";
 
 export const ShopContext = createContext(null);
@@ -14,10 +14,8 @@ export const ShopContextProvider = ({ children }) => {
     useEffect(() => {
         const fetchMotors = async () => {
             const authToken = localStorage.getItem("jwtToken");
-            console.log("Fetching motors with token:", authToken);
 
             if (!authToken) {
-                console.error("No auth token found");
                 setError(new Error("No auth token found"));
                 setLoading(false);
                 return;
@@ -38,11 +36,8 @@ export const ShopContextProvider = ({ children }) => {
                 }
 
                 const data = await response.json();
-                console.log("Fetched Motors Data:", data);
-
                 setMotors(data.items || []);
             } catch (err) {
-                console.error("Error fetching motors:", err);
                 setError(err);
             } finally {
                 setLoading(false);
@@ -65,7 +60,7 @@ export const ShopContextProvider = ({ children }) => {
         let totalAmount = 0;
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
-                let itemInfo = motors.find(
+                const itemInfo = motors.find(
                     (motor) => motor.id === Number(item)
                 );
                 if (itemInfo) {
@@ -86,14 +81,30 @@ export const ShopContextProvider = ({ children }) => {
     };
 
     const removeFromCart = (itemId) => {
-        setCartItems((prev) => ({
-            ...prev,
-            [itemId]: Math.max((prev[itemId] || 1) - 1, 0),
-        }));
+        setCartItems((prev) => {
+            const newCount = (prev[itemId] || 1) - 1;
+            if (newCount <= 0) {
+                const updatedCart = { ...prev };
+                delete updatedCart[itemId];
+                return updatedCart;
+            }
+            return { ...prev, [itemId]: newCount };
+        });
+    };
+
+    const removeItemFromCart = (itemId) => {
+        setCartItems((prev) => {
+            const updatedCart = { ...prev };
+            delete updatedCart[itemId];
+            return updatedCart;
+        });
     };
 
     const updateCartItemCount = (newAmount, itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: newAmount }));
+        setCartItems((prev) => ({
+            ...prev,
+            [itemId]: Math.max(newAmount, 1),
+        }));
     };
 
     const clearCart = () => {
@@ -125,7 +136,6 @@ export const ShopContextProvider = ({ children }) => {
 
             setMotors((prev) => prev.filter((motor) => motor.id !== id));
         } catch (err) {
-            console.error("Error deleting motor:", err);
             setError(err);
         }
     };
@@ -134,19 +144,16 @@ export const ShopContextProvider = ({ children }) => {
         if (!isAdmin) return;
 
         const authToken = localStorage.getItem("jwtToken");
-
         const { id: _id, ...formattedData } = updatedData;
 
         formattedData.beschikbaarheid =
-            updatedData.beschikbaarheid === "true" ||
-            updatedData.beschikbaarheid === true;
+            formattedData.beschikbaarheid === "true" ||
+            formattedData.beschikbaarheid === true;
 
         if (formattedData.datum) {
             const date = new Date(formattedData.datum);
             formattedData.datum = date.toISOString().split("T")[0];
         }
-
-        console.log("Updating motor with data:", formattedData);
 
         try {
             const response = await fetch(
@@ -162,9 +169,8 @@ export const ShopContextProvider = ({ children }) => {
             );
 
             if (!response.ok) {
-                const errorText = await response.text();
                 throw new Error(
-                    `Failed to update motor: ${response.statusText}. Details: ${errorText}`
+                    `Failed to update motor: ${response.statusText}`
                 );
             }
 
@@ -173,7 +179,6 @@ export const ShopContextProvider = ({ children }) => {
                 prev.map((motor) => (motor.id === id ? updatedMotor : motor))
             );
         } catch (err) {
-            console.error("Error editing motor:", err);
             setError(err);
         }
     };
@@ -194,16 +199,14 @@ export const ShopContextProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
                 throw new Error(
-                    `Failed to create motor: ${response.statusText}. Details: ${errorText}`
+                    `Failed to create motor: ${response.statusText}`
                 );
             }
 
             const newMotor = await response.json();
             setMotors((prev) => [...prev, newMotor]);
         } catch (err) {
-            console.error("Error creating motor:", err);
             setError(err);
         }
     };
@@ -213,6 +216,7 @@ export const ShopContextProvider = ({ children }) => {
         addToCart,
         updateCartItemCount,
         removeFromCart,
+        removeItemFromCart,
         getTotalCartAmount,
         clearCart,
         checkout,

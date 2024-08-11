@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Box,
     Image,
@@ -22,21 +22,24 @@ import {
     AlertDialogBody,
     AlertDialogFooter,
     useDisclosure,
-    useDisclosure as useAlertDisclosure,
+    useToast,
 } from "@chakra-ui/react";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import imageMap from "../../assets/imageMap";
 import RatingStars from "../../components/motors/RatingStars";
 import { useAuth } from "../../context/auth-context";
+import { ShopContext } from "../../context/shop-context";
 
-const Motor = ({ motor, onAddToCart, onDelete, onEdit }) => {
+const Motor = ({ motor, onDelete, onEdit }) => {
     const { isAdmin } = useAuth();
+    const { cartItems, addToCart } = useContext(ShopContext);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isAlertOpen,
         onOpen: onAlertOpen,
         onClose: onAlertClose,
-    } = useAlertDisclosure();
+    } = useDisclosure();
+    const toast = useToast();
     const [editedMotor, setEditedMotor] = useState({ ...motor });
     const [currentDateTime, setCurrentDateTime] = useState("");
 
@@ -50,7 +53,6 @@ const Motor = ({ motor, onAddToCart, onDelete, onEdit }) => {
 
     if (!motor) return null;
 
-    // Handler functie voor het bijwerken van de input
     const handleChange = (event) => {
         const { name, value } = event.target;
         setEditedMotor({
@@ -70,7 +72,6 @@ const Motor = ({ motor, onAddToCart, onDelete, onEdit }) => {
             model: editedMotor.model || "",
         };
 
-        console.log("Updated Motor Data:", updatedMotor);
         onEdit(updatedMotor);
         onClose();
     };
@@ -78,6 +79,20 @@ const Motor = ({ motor, onAddToCart, onDelete, onEdit }) => {
     const handleDelete = () => {
         onDelete();
         onAlertClose();
+    };
+
+    const handleAddToCart = () => {
+        if (!motor.beschikbaarheid) {
+            toast({
+                title: "Motor niet beschikbaar",
+                description: "Deze motor is momenteel niet beschikbaar.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        } else {
+            addToCart(motor.id);
+        }
     };
 
     const prijsPerDag = parseFloat(motor.huurprijs_per_dag).toFixed(2);
@@ -151,8 +166,15 @@ const Motor = ({ motor, onAddToCart, onDelete, onEdit }) => {
                 <RatingStars rating={motor.rating} />
             </VStack>
             {!isAdmin && (
-                <Button colorScheme="blue" mt={4} onClick={onAddToCart}>
-                    Add To Cart
+                <Button
+                    colorScheme="blue"
+                    mt={4}
+                    onClick={handleAddToCart}
+                    isDisabled={
+                        cartItems[motor.id] > 0 || !motor.beschikbaarheid
+                    }
+                >
+                    {cartItems[motor.id] > 0 ? "In Cart" : "Add To Cart"}
                 </Button>
             )}
             <Modal isOpen={isOpen} onClose={onClose}>
