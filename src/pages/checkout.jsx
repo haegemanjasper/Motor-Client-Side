@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
     Flex,
     Box,
@@ -9,6 +9,7 @@ import {
     FormErrorMessage,
     Grid,
     GridItem,
+    Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import CartSummary from "../components/shop/cart-summary";
@@ -17,6 +18,7 @@ import { ShopContext } from "../context/shop-context";
 export default function Checkout() {
     const navigate = useNavigate();
     const shopContext = useContext(ShopContext);
+
     const [formData, setFormData] = useState({
         name: "",
         cardNumber: "",
@@ -24,14 +26,66 @@ export default function Checkout() {
         expiryYear: "",
         billingAddress: "",
         city: "",
-        country: "",
-        state: "",
         zip: "",
         email: "",
+        paymentMethod: "Visa",
+        location: "",
     });
+    const [locations, setLocations] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [totalAmount, setTotalAmount] = useState(0);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        const fetchLocations = async () => {
+            const authToken = localStorage.getItem("jwtToken");
+
+            if (!authToken) {
+                setError(new Error("No auth token found"));
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "http://localhost:9000/api/huurlocaties",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && Array.isArray(data.items)) {
+                    setLocations(data.items);
+                } else {
+                    console.error("Unexpected data structure:", data);
+                }
+            } catch (error) {
+                setError(error);
+                console.error("Error fetching locations:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLocations();
+    }, []);
+
+    useEffect(() => {
+        setTotalAmount(shopContext.getTotalCartAmount());
+    }, [shopContext]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setFormSubmitted(true);
 
@@ -39,10 +93,44 @@ export default function Checkout() {
             return;
         }
 
-        localStorage.setItem("userEmail", formData.email);
+        const authToken = localStorage.getItem("jwtToken");
 
-        navigate("/confirmation");
-        shopContext.clearCart();
+        if (!authToken) {
+            setError(new Error("No auth token found"));
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "http://localhost:9000/api/betalingen",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                    body: JSON.stringify({
+                        bedrag: totalAmount,
+                        betaalmethode: formData.paymentMethod,
+                        datum: new Date().toISOString(),
+                        huurlocatieId: Number(formData.location),
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Opslaan van het e-mailadres in localStorage
+            localStorage.setItem("userEmail", formData.email);
+
+            navigate("/confirmation");
+            shopContext.clearCart();
+        } catch (error) {
+            setError(error);
+            console.error("Error submitting payment:", error);
+        }
     };
 
     const isFormValid = (formData) => {
@@ -75,6 +163,9 @@ export default function Checkout() {
         return value.trim() !== "";
     };
 
+    if (loading) return <p>Loading locations...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
     return (
         <Flex
             flexDirection={{ base: "column", md: "row" }}
@@ -99,7 +190,7 @@ export default function Checkout() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        placeholder="Jaak de Draak"
+                        placeholder="Jan Jansens"
                     />
                     <FormErrorMessage>
                         Please fill in this field
@@ -184,42 +275,6 @@ export default function Checkout() {
                         </FormControl>
                     </GridItem>
                     <GridItem colSpan={1}>
-                        <FormControl
-                            mb="4"
-                            isInvalid={shouldShowError("country")}
-                        >
-                            <FormLabel>Country</FormLabel>
-                            <Input
-                                name="country"
-                                value={formData.country}
-                                onChange={handleInputChange}
-                                placeholder="Country"
-                            />
-                            <FormErrorMessage>
-                                Please fill in this field
-                            </FormErrorMessage>
-                        </FormControl>
-                    </GridItem>
-                </Grid>
-                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                    <GridItem colSpan={1}>
-                        <FormControl
-                            mb="4"
-                            isInvalid={shouldShowError("state")}
-                        >
-                            <FormLabel>State</FormLabel>
-                            <Input
-                                name="state"
-                                value={formData.state}
-                                onChange={handleInputChange}
-                                placeholder="State"
-                            />
-                            <FormErrorMessage>
-                                Please fill in this field
-                            </FormErrorMessage>
-                        </FormControl>
-                    </GridItem>
-                    <GridItem colSpan={1}>
                         <FormControl mb="4" isInvalid={shouldShowError("zip")}>
                             <FormLabel>ZIP</FormLabel>
                             <Input
@@ -237,8 +292,8 @@ export default function Checkout() {
                 <FormControl mb="4" isInvalid={shouldShowError("email")}>
                     <FormLabel>Email</FormLabel>
                     <Input
-                        type="email"
                         name="email"
+                        type="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="example@example.com"
@@ -247,8 +302,38 @@ export default function Checkout() {
                         Please fill in this field
                     </FormErrorMessage>
                 </FormControl>
-                <Button colorScheme="red" width="full" type="submit">
-                    Submit
+                <FormControl mb="4">
+                    <FormLabel>Payment Method</FormLabel>
+                    <Select
+                        name="paymentMethod"
+                        value={formData.paymentMethod}
+                        onChange={handleInputChange}
+                    >
+                        <option value="Visa">Visa</option>
+                        <option value="Bancontact">Bancontact</option>
+                        <option value="PayPal">PayPal</option>
+                    </Select>
+                </FormControl>
+                <FormControl mb="4" isInvalid={shouldShowError("location")}>
+                    <FormLabel>Location</FormLabel>
+                    <Select
+                        name="location"
+                        value={formData.location}
+                        onChange={handleInputChange}
+                    >
+                        <option value="">Select a location</option>
+                        {locations.map((location) => (
+                            <option key={location.id} value={location.id}>
+                                {location.naam}
+                            </option>
+                        ))}
+                    </Select>
+                    <FormErrorMessage>
+                        Please select a location
+                    </FormErrorMessage>
+                </FormControl>
+                <Button colorScheme="blue" type="submit">
+                    Pay {totalAmount.toFixed(2)} EUR
                 </Button>
             </Box>
             <CartSummary />

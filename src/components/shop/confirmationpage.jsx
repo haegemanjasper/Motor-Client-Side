@@ -11,8 +11,11 @@ const ConfirmationPage = () => {
         if (storedEmail) {
             setEmail(storedEmail);
             sendConfirmationEmail(storedEmail);
+        } else {
+            // Redirect to home if no email is found
+            navigate("/");
         }
-    }, []);
+    }, [navigate]);
 
     const sendConfirmationEmail = async (recipientEmail) => {
         try {
@@ -23,23 +26,18 @@ const ConfirmationPage = () => {
                 },
                 body: JSON.stringify({
                     recipientEmail: recipientEmail,
-                    subject: "Betalingsbevestiging",
-                    text: "Dit is een bevestiging van uw betaling. Bedankt voor uw bestelling.",
+                    subject: "Payment Confirmation",
+                    text: "This is a confirmation of your payment. Thank you for your order.",
                 }),
             });
 
             if (response.ok) {
-                console.log("E-mail verzonden");
+                console.log("Email sent");
             } else {
-                console.error(
-                    "Er is een fout opgetreden bij het verzenden van de e-mail"
-                );
+                console.error("Error sending email");
             }
         } catch (error) {
-            console.error(
-                "Er is een fout opgetreden bij het verzenden van de e-mail:",
-                error
-            );
+            console.error("Error sending email:", error);
         }
     };
 
@@ -48,13 +46,20 @@ const ConfirmationPage = () => {
     };
 
     return (
-        <Box textAlign="center" py="20">
-            <Text fontSize="2xl" mb="4">
-                Thank you for your order.
+        <Box
+            textAlign="center"
+            py="20"
+            px={{ base: "4", md: "8" }}
+            bg="gray.50"
+        >
+            <Text fontSize="3xl" fontWeight="bold" mb="6" color="green.500">
+                Thank you for your order!
             </Text>
-            <Text mb="8">A confirmation email has been sent to {email}.</Text>
-            <Button colorScheme="red" onClick={handleReturnHome}>
-                Return Home
+            <Text fontSize="lg" mb="8">
+                A confirmation email has been sent to <strong>{email}</strong>.
+            </Text>
+            <Button colorScheme="blue" size="lg" onClick={handleReturnHome}>
+                Return to Home
             </Button>
         </Box>
     );
