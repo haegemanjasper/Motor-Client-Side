@@ -2,33 +2,18 @@ import React, { useState, useEffect } from "react";
 import {
     Box,
     Heading,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
+    Button,
     Spinner,
     Text,
     Alert,
     AlertIcon,
-    IconButton,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
     useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useAuth } from "../context/auth-context";
-import { DeleteIcon } from "@chakra-ui/icons";
+import LocationTable from "../components/location/LocationTable";
+import CreateLocationModal from "../components/location/CreateLocationModal";
+import DeleteLocationModal from "../components/location/DeleteLocationModal";
 
 const Locations = () => {
     const [locations, setLocations] = useState([]);
@@ -43,7 +28,11 @@ const Locations = () => {
         stad: "",
     });
     const { token } = useAuth();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isCreateOpen,
+        onOpen: onCreateOpen,
+        onClose: onCreateClose,
+    } = useDisclosure();
     const {
         isOpen: isDeleteOpen,
         onOpen: onDeleteOpen,
@@ -56,19 +45,13 @@ const Locations = () => {
                 const response = await axios.get(
                     "http://localhost:9000/api/huurlocaties",
                     {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                     }
                 );
-                console.log("API Response:", response.data);
-
                 if (response.data && Array.isArray(response.data.items)) {
                     setLocations(response.data.items);
                 } else {
-                    throw new Error(
-                        "Unexpected response format: No 'items' key or not an array"
-                    );
+                    throw new Error("Unexpected response format");
                 }
             } catch (err) {
                 console.error("Error fetching locations:", err);
@@ -77,26 +60,20 @@ const Locations = () => {
                 setLoading(false);
             }
         };
-
         fetchLocations();
     }, [token]);
 
     const handleDeleteLocation = async () => {
         if (!selectedLocation) return;
-
         try {
             await axios.delete(
                 `http://localhost:9000/api/huurlocaties/${selectedLocation.id}`,
                 {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 }
             );
             setLocations(
-                locations.filter(
-                    (location) => location.id !== selectedLocation.id
-                )
+                locations.filter((loc) => loc.id !== selectedLocation.id)
             );
             onDeleteClose();
         } catch (err) {
@@ -111,9 +88,7 @@ const Locations = () => {
                 "http://localhost:9000/api/huurlocaties",
                 newLocation,
                 {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 }
             );
             setLocations([...locations, response.data]);
@@ -124,7 +99,7 @@ const Locations = () => {
                 postcode: "",
                 stad: "",
             });
-            onClose();
+            onCreateClose();
         } catch (err) {
             console.error("Error creating location:", err);
             setError("Failed to create location. Please try again later.");
@@ -139,7 +114,7 @@ const Locations = () => {
             postcode: "",
             stad: "",
         });
-        onOpen();
+        onCreateOpen();
     };
 
     const openDeleteModal = (location) => {
@@ -174,139 +149,25 @@ const Locations = () => {
                 + Create New Location
             </Button>
             {locations.length > 0 ? (
-                <Table variant="simple">
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>Street</Th>
-                            <Th>House Number</Th>
-                            <Th>Postal Code</Th>
-                            <Th>City</Th>
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {locations.map((location) => (
-                            <Tr key={location.id}>
-                                <Td>{location.naam}</Td>
-                                <Td>{location.straat}</Td>
-                                <Td>{location.huisnummer}</Td>
-                                <Td>{location.postcode}</Td>
-                                <Td>{location.stad}</Td>
-                                <Td>
-                                    <IconButton
-                                        icon={<DeleteIcon />}
-                                        colorScheme="red"
-                                        aria-label="Delete location"
-                                        onClick={() =>
-                                            openDeleteModal(location)
-                                        }
-                                    />
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+                <LocationTable
+                    locations={locations}
+                    onDelete={openDeleteModal}
+                />
             ) : (
                 <Text>No locations found</Text>
             )}
-
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Create New Location</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <FormControl isRequired>
-                            <FormLabel>Name</FormLabel>
-                            <Input
-                                value={newLocation.naam}
-                                onChange={(e) =>
-                                    setNewLocation({
-                                        ...newLocation,
-                                        naam: e.target.value,
-                                    })
-                                }
-                            />
-                            <FormLabel>Street</FormLabel>
-                            <Input
-                                value={newLocation.straat}
-                                onChange={(e) =>
-                                    setNewLocation({
-                                        ...newLocation,
-                                        straat: e.target.value,
-                                    })
-                                }
-                            />
-                            <FormLabel>House Number</FormLabel>
-                            <Input
-                                type="number"
-                                value={newLocation.huisnummer}
-                                onChange={(e) =>
-                                    setNewLocation({
-                                        ...newLocation,
-                                        huisnummer: e.target.value,
-                                    })
-                                }
-                            />
-                            <FormLabel>Postal Code</FormLabel>
-                            <Input
-                                type="number"
-                                value={newLocation.postcode}
-                                onChange={(e) =>
-                                    setNewLocation({
-                                        ...newLocation,
-                                        postcode: e.target.value,
-                                    })
-                                }
-                            />
-                            <FormLabel>City</FormLabel>
-                            <Input
-                                value={newLocation.stad}
-                                onChange={(e) =>
-                                    setNewLocation({
-                                        ...newLocation,
-                                        stad: e.target.value,
-                                    })
-                                }
-                            />
-                        </FormControl>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            colorScheme="blue"
-                            mr={3}
-                            onClick={handleCreateLocation}
-                        >
-                            Create
-                        </Button>
-                        <Button onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-
-            <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Confirm Deletion</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Text>
-                            Are you sure you want to delete this location?
-                        </Text>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            colorScheme="red"
-                            mr={3}
-                            onClick={handleDeleteLocation}
-                        >
-                            Delete
-                        </Button>
-                        <Button onClick={onDeleteClose}>Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            <CreateLocationModal
+                isOpen={isCreateOpen}
+                onClose={onCreateClose}
+                newLocation={newLocation}
+                setNewLocation={setNewLocation}
+                handleCreateLocation={handleCreateLocation}
+            />
+            <DeleteLocationModal
+                isOpen={isDeleteOpen}
+                onClose={onDeleteClose}
+                handleDeleteLocation={handleDeleteLocation}
+            />
         </Box>
     );
 };
