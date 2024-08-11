@@ -122,7 +122,8 @@ export default function Checkout() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const result = await response.json();
+            // Opslaan van het e-mailadres in localStorage
+            localStorage.setItem("userEmail", formData.email);
 
             navigate("/confirmation");
             shopContext.clearCart();
@@ -331,7 +332,7 @@ export default function Checkout() {
                         Please select a location
                     </FormErrorMessage>
                 </FormControl>
-                <Button colorScheme="teal" type="submit">
+                <Button colorScheme="blue" type="submit">
                     Pay {totalAmount.toFixed(2)} EUR
                 </Button>
             </Box>
