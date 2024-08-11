@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
     Flex,
     Box,
@@ -9,6 +9,7 @@ import {
     FormErrorMessage,
     Grid,
     GridItem,
+    Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import CartSummary from "../components/shop/cart-summary";
@@ -17,6 +18,7 @@ import { ShopContext } from "../context/shop-context";
 export default function Checkout() {
     const navigate = useNavigate();
     const shopContext = useContext(ShopContext);
+
     const [formData, setFormData] = useState({
         name: "",
         cardNumber: "",
@@ -24,12 +26,60 @@ export default function Checkout() {
         expiryYear: "",
         billingAddress: "",
         city: "",
-        country: "",
-        state: "",
         zip: "",
         email: "",
+        paymentMethod: "Visa",
+        location: "",
     });
+    const [locations, setLocations] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            const authToken = localStorage.getItem("jwtToken");
+
+            if (!authToken) {
+                setError(new Error("No auth token found"));
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "http://localhost:9000/api/huurlocaties",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Assuming the data is an object with an `items` array
+                if (data && Array.isArray(data.items)) {
+                    setLocations(data.items);
+                } else {
+                    console.error("Unexpected data structure:", data);
+                }
+            } catch (error) {
+                setError(error);
+                console.error("Error fetching locations:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLocations();
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -74,6 +124,9 @@ export default function Checkout() {
         }
         return value.trim() !== "";
     };
+
+    if (loading) return <p>Loading locations...</p>;
+    if (error) return <p>Error: {error.message}</p>;
 
     return (
         <Flex
@@ -184,42 +237,6 @@ export default function Checkout() {
                         </FormControl>
                     </GridItem>
                     <GridItem colSpan={1}>
-                        <FormControl
-                            mb="4"
-                            isInvalid={shouldShowError("country")}
-                        >
-                            <FormLabel>Country</FormLabel>
-                            <Input
-                                name="country"
-                                value={formData.country}
-                                onChange={handleInputChange}
-                                placeholder="Country"
-                            />
-                            <FormErrorMessage>
-                                Please fill in this field
-                            </FormErrorMessage>
-                        </FormControl>
-                    </GridItem>
-                </Grid>
-                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                    <GridItem colSpan={1}>
-                        <FormControl
-                            mb="4"
-                            isInvalid={shouldShowError("state")}
-                        >
-                            <FormLabel>State</FormLabel>
-                            <Input
-                                name="state"
-                                value={formData.state}
-                                onChange={handleInputChange}
-                                placeholder="State"
-                            />
-                            <FormErrorMessage>
-                                Please fill in this field
-                            </FormErrorMessage>
-                        </FormControl>
-                    </GridItem>
-                    <GridItem colSpan={1}>
                         <FormControl mb="4" isInvalid={shouldShowError("zip")}>
                             <FormLabel>ZIP</FormLabel>
                             <Input
@@ -246,6 +263,38 @@ export default function Checkout() {
                     <FormErrorMessage>
                         Please fill in this field
                     </FormErrorMessage>
+                </FormControl>
+                <FormControl mb="4">
+                    <FormLabel>Payment Method</FormLabel>
+                    <Select
+                        name="paymentMethod"
+                        value={formData.paymentMethod}
+                        onChange={handleInputChange}
+                    >
+                        <option value="Visa">Visa</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Bancontact">Bancontact</option>
+                    </Select>
+                </FormControl>
+                <FormControl mb="4">
+                    <FormLabel>Location</FormLabel>
+                    <Select
+                        name="location"
+                        value={formData.location}
+                        onChange={handleInputChange}
+                    >
+                        <option value="">Select a location</option>
+                        {locations.length > 0 ? (
+                            locations.map((location) => (
+                                <option key={location.id} value={location.id}>
+                                    {location.naam}{" "}
+                                    {/* Corrected to use `naam` */}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Loading locations...</option>
+                        )}
+                    </Select>
                 </FormControl>
                 <Button colorScheme="red" width="full" type="submit">
                     Submit

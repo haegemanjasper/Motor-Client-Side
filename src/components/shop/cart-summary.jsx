@@ -35,6 +35,7 @@ const CartSummary = () => {
                     if (!motor || (cartItems[itemId] || 0) <= 0) return null;
 
                     const imageSrc = imageMap[motor.merk];
+                    const quantity = cartItems[itemId] || 1;
 
                     return (
                         <HStack
@@ -53,12 +54,15 @@ const CartSummary = () => {
                             <VStack align="start" spacing={0} ml={2}>
                                 <Text fontWeight="bold">{motor.merk}</Text>
                                 <Text>{motor.model}</Text>
+                                <Text fontSize="sm" color="gray.600">
+                                    {quantity} day{quantity > 1 ? "s" : ""}
+                                </Text>
                             </VStack>
                             <Text fontWeight="bold">
                                 €
-                                {(
-                                    cartItems[itemId] * motor.huurprijs_per_dag
-                                ).toFixed(2)}
+                                {(quantity * motor.huurprijs_per_dag).toFixed(
+                                    2
+                                )}
                             </Text>
                         </HStack>
                     );
