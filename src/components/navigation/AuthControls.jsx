@@ -16,7 +16,13 @@ import { useColorMode } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-const AuthControls = ({ isAuthed, logout, toggleColorMode, userName }) => {
+const AuthControls = ({
+    isAuthed,
+    isAdmin,
+    logout,
+    toggleColorMode,
+    userName,
+}) => {
     const { colorMode } = useColorMode();
     const navigate = useNavigate();
 
@@ -35,8 +41,13 @@ const AuthControls = ({ isAuthed, logout, toggleColorMode, userName }) => {
                     <MenuItem as={RouterLink} to="/profile">
                         Account
                     </MenuItem>
+
+                    <MenuItem as={RouterLink} to="/viewpayments">
+                        Payments
+                    </MenuItem>
+
                     <MenuDivider />
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>{" "}
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
             </Menu>
             <Button onClick={toggleColorMode} ml={4}>

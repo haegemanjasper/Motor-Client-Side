@@ -24,7 +24,6 @@ const Links = [
     { text: "Motorcycle Rentals", link: "/shop", roles: ["klant", "admin"] },
     { text: "Cart", link: "/cart", roles: ["klant"] },
     { text: "Customers", link: "/viewcustomers", roles: ["admin"] },
-    { text: "Payments", link: "/viewpayments", roles: ["admin"] },
     { text: "Locations", link: "/viewlocations", roles: ["admin"] },
 ];
 

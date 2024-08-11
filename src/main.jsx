@@ -14,8 +14,9 @@ import Register from "./pages/register";
 import Login from "./pages/login";
 import AboutUs from "./pages/aboutus";
 import RentABike from "./pages/rentabike";
-import Customers from "./pages/customers"; // Zorg ervoor dat dit pad klopt
+import Customers from "./pages/customers";
 import Profile from "./pages/profile";
+import Payments from "./pages/payments";
 import ConfirmationPage from "./components/shop/confirmationpage";
 import { ShopContextProvider } from "./context/shop-context";
 import Root from "./root";
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
             { path: "/aboutus", element: <AboutUs /> },
             { path: "/rentabike", element: <RentABike /> },
             { path: "/profile", element: <Profile /> },
-            { path: "/viewcustomers", element: <Customers /> }, // Zorg ervoor dat dit pad klopt
+            { path: "/viewcustomers", element: <Customers /> },
+            { path: "/viewpayments", element: <Payments /> },
         ],
     },
 ]);
