@@ -21,6 +21,9 @@ import {
     ModalBody,
     ModalFooter,
     Button,
+    FormControl,
+    FormLabel,
+    Input,
     useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -32,8 +35,20 @@ const Locations = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
+    const [newLocation, setNewLocation] = useState({
+        naam: "",
+        straat: "",
+        huisnummer: "",
+        postcode: "",
+        stad: "",
+    });
     const { token } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isDeleteOpen,
+        onOpen: onDeleteOpen,
+        onClose: onDeleteClose,
+    } = useDisclosure();
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -83,16 +98,53 @@ const Locations = () => {
                     (location) => location.id !== selectedLocation.id
                 )
             );
-            onClose();
+            onDeleteClose();
         } catch (err) {
             console.error("Error deleting location:", err);
             setError("Failed to delete location. Please try again later.");
         }
     };
 
-    const openConfirmationModal = (location) => {
-        setSelectedLocation(location);
+    const handleCreateLocation = async () => {
+        try {
+            const response = await axios.post(
+                "http://localhost:9000/api/huurlocaties",
+                newLocation,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setLocations([...locations, response.data]);
+            setNewLocation({
+                naam: "",
+                straat: "",
+                huisnummer: "",
+                postcode: "",
+                stad: "",
+            });
+            onClose();
+        } catch (err) {
+            console.error("Error creating location:", err);
+            setError("Failed to create location. Please try again later.");
+        }
+    };
+
+    const openCreateModal = () => {
+        setNewLocation({
+            naam: "",
+            straat: "",
+            huisnummer: "",
+            postcode: "",
+            stad: "",
+        });
         onOpen();
+    };
+
+    const openDeleteModal = (location) => {
+        setSelectedLocation(location);
+        onDeleteOpen();
     };
 
     if (loading) {
@@ -118,6 +170,9 @@ const Locations = () => {
     return (
         <Box p={4}>
             <Heading mb={4}>Location List</Heading>
+            <Button colorScheme="blue" mb={4} onClick={openCreateModal}>
+                + Create New Location
+            </Button>
             {locations.length > 0 ? (
                 <Table variant="simple">
                     <Thead>
@@ -144,7 +199,7 @@ const Locations = () => {
                                         colorScheme="red"
                                         aria-label="Delete location"
                                         onClick={() =>
-                                            openConfirmationModal(location)
+                                            openDeleteModal(location)
                                         }
                                     />
                                 </Td>
@@ -156,8 +211,81 @@ const Locations = () => {
                 <Text>No locations found</Text>
             )}
 
-            {/* Confirmation Modal */}
             <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Create New Location</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl isRequired>
+                            <FormLabel>Name</FormLabel>
+                            <Input
+                                value={newLocation.naam}
+                                onChange={(e) =>
+                                    setNewLocation({
+                                        ...newLocation,
+                                        naam: e.target.value,
+                                    })
+                                }
+                            />
+                            <FormLabel>Street</FormLabel>
+                            <Input
+                                value={newLocation.straat}
+                                onChange={(e) =>
+                                    setNewLocation({
+                                        ...newLocation,
+                                        straat: e.target.value,
+                                    })
+                                }
+                            />
+                            <FormLabel>House Number</FormLabel>
+                            <Input
+                                type="number"
+                                value={newLocation.huisnummer}
+                                onChange={(e) =>
+                                    setNewLocation({
+                                        ...newLocation,
+                                        huisnummer: e.target.value,
+                                    })
+                                }
+                            />
+                            <FormLabel>Postal Code</FormLabel>
+                            <Input
+                                type="number"
+                                value={newLocation.postcode}
+                                onChange={(e) =>
+                                    setNewLocation({
+                                        ...newLocation,
+                                        postcode: e.target.value,
+                                    })
+                                }
+                            />
+                            <FormLabel>City</FormLabel>
+                            <Input
+                                value={newLocation.stad}
+                                onChange={(e) =>
+                                    setNewLocation({
+                                        ...newLocation,
+                                        stad: e.target.value,
+                                    })
+                                }
+                            />
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            colorScheme="blue"
+                            mr={3}
+                            onClick={handleCreateLocation}
+                        >
+                            Create
+                        </Button>
+                        <Button onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Confirm Deletion</ModalHeader>
@@ -175,9 +303,7 @@ const Locations = () => {
                         >
                             Delete
                         </Button>
-                        <Button colorScheme="blue" onClick={onClose}>
-                            Cancel
-                        </Button>
+                        <Button onClick={onDeleteClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
