@@ -37,17 +37,23 @@ const LoginForm = () => {
     const handleLogin = useCallback(
         async (formData) => {
             setIsLoading(true);
+            setLoginError(""); // Reset the error message
             const { email, password } = formData;
-            const loggedIn = await login(email, password);
+            try {
+                const loggedIn = await login(email, password);
 
-            if (loggedIn) {
-                setTimeout(() => {
-                    window.location.replace("/");
-                }, 100);
-            } else {
-                setLoginError("Incorrect email or password.");
+                if (loggedIn) {
+                    setTimeout(() => {
+                        window.location.replace("/"); // Redirect to home page
+                    }, 100); // Short delay to allow for any final updates
+                } else {
+                    setLoginError("Incorrect email or password.");
+                }
+            } catch (error) {
+                setLoginError("An unexpected error occurred.");
+            } finally {
+                setIsLoading(false); // Ensure loading spinner is hidden
             }
-            setIsLoading(false);
         },
         [login]
     );
