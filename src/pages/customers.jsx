@@ -13,11 +13,16 @@ const Customers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const { token } = useAuth();
+    const { token, isAdmin } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!isAdmin) {
+            navigate("/forbidden");
+            return;
+        }
+
         const fetchCustomers = async () => {
             try {
                 const response = await axios.get(
@@ -50,7 +55,7 @@ const Customers = () => {
         };
 
         fetchCustomers();
-    }, [token, navigate]);
+    }, [token, navigate, isAdmin]);
 
     const handleDeleteCustomer = async () => {
         if (!selectedCustomer) return;
