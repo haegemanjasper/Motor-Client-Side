@@ -4,9 +4,8 @@ import CustomCarousel from "../components/banner/customCarousel.jsx";
 import { useAuth } from "../context/auth-context";
 
 const Home = () => {
-    const { klant, isAdmin } = useAuth(); // Haal de rol van de gebruiker op
+    const { klant, isAdmin } = useAuth();
 
-    // Bepaal de welkomsttekst op basis van de rol van de gebruiker
     const welcomeMessage = isAdmin
         ? `Welcome Admin ${klant?.voornaam || ""}!`
         : klant

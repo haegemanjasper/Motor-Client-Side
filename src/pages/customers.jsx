@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-    Box,
-    Heading,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    Spinner,
-    Text,
-    Alert,
-    AlertIcon,
-    IconButton,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    Button,
-    useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Heading, useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import { useAuth } from "../context/auth-context";
-import { DeleteIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/payments/Loading";
+import Error from "../components/payments/Error";
+import CustomersTable from "../components/customer/CustomersTable";
+import ConfirmationModal from "../components/customer/ConfirmationModal";
 
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
@@ -53,9 +33,7 @@ const Customers = () => {
                 if (response.data && Array.isArray(response.data.items)) {
                     setCustomers(response.data.items);
                 } else {
-                    throw new Error(
-                        "Unexpected response format: No 'items' key or not an array"
-                    );
+                    throw new Error("Unexpected response format");
                 }
             } catch (err) {
                 console.error("Error fetching customers:", err);
@@ -103,94 +81,24 @@ const Customers = () => {
         onOpen();
     };
 
-    if (loading) {
-        return (
-            <Box p={4} textAlign="center">
-                <Spinner size="lg" />
-                <Text mt={4}>Loading...</Text>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box p={4} textAlign="center">
-                <Alert status="error">
-                    <AlertIcon />
-                    {error}
-                </Alert>
-            </Box>
-        );
-    }
-
     return (
         <Box p={4}>
             <Heading mb={4}>Customer List</Heading>
-            {customers.length > 0 ? (
-                <Table variant="simple">
-                    <Thead>
-                        <Tr>
-                            <Th>Name</Th>
-                            <Th>First Name</Th>
-                            <Th>Email</Th>
-                            <Th>Street</Th>
-                            <Th>House Number</Th>
-                            <Th>Postal Code</Th>
-                            <Th>City</Th>
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {customers.map((customer) => (
-                            <Tr key={customer.id}>
-                                <Td>{customer.naam}</Td>
-                                <Td>{customer.voornaam}</Td>
-                                <Td>{customer.email}</Td>
-                                <Td>{customer.straat}</Td>
-                                <Td>{customer.huisnummer}</Td>
-                                <Td>{customer.postcode}</Td>
-                                <Td>{customer.stad}</Td>
-                                <Td>
-                                    <IconButton
-                                        icon={<DeleteIcon />}
-                                        colorScheme="red"
-                                        aria-label="Delete customer"
-                                        onClick={() =>
-                                            openConfirmationModal(customer)
-                                        }
-                                    />
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+            {loading ? (
+                <Loading />
+            ) : error ? (
+                <Error message={error} />
             ) : (
-                <Text>No customers found</Text>
+                <CustomersTable
+                    customers={customers}
+                    onDelete={openConfirmationModal}
+                />
             )}
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Confirm Deletion</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Text>
-                            Are you sure you want to delete this customer?
-                        </Text>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            colorScheme="red"
-                            mr={3}
-                            onClick={handleDeleteCustomer}
-                        >
-                            Delete
-                        </Button>
-                        <Button colorScheme="blue" onClick={onClose}>
-                            Cancel
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            <ConfirmationModal
+                isOpen={isOpen}
+                onClose={onClose}
+                onConfirm={handleDeleteCustomer}
+            />
         </Box>
     );
 };
