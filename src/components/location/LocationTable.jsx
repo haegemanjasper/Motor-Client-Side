@@ -24,6 +24,7 @@ const LocationTable = ({ locations, onDelete }) => (
                     <Td>{location.stad}</Td>
                     <Td>
                         <IconButton
+                            data-cy={`delete-location-${location.id}`}
                             icon={<DeleteIcon />}
                             colorScheme="red"
                             aria-label="Delete location"

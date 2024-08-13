@@ -56,7 +56,11 @@ const ProfileForm = ({ formData, handleChange, isEditing, onSubmit }) => (
                 isReadOnly={!isEditing}
             />
             {isEditing && (
-                <Button type="submit" colorScheme="blue">
+                <Button
+                    type="submit"
+                    colorScheme="blue"
+                    data-cy="update-profile-button"
+                >
                     Update Profile
                 </Button>
             )}

@@ -34,39 +34,65 @@ const AuthControls = ({
     return isAuthed ? (
         <Flex alignItems={"center"} ml={4}>
             <Menu>
-                <MenuButton>
-                    <Avatar size="sm" name={userName || "User"} />
+                <MenuButton data-cy="avatar-menu-button">
+                    <Avatar
+                        size="sm"
+                        name={userName || "User"}
+                        data-cy="user-avatar"
+                    />
                 </MenuButton>
                 <MenuList>
-                    <MenuItem as={RouterLink} to="/profile">
+                    <MenuItem
+                        as={RouterLink}
+                        to="/profile"
+                        data-cy="profile-menu-item"
+                    >
                         Account
                     </MenuItem>
 
-                    <MenuItem as={RouterLink} to="/viewpayments">
+                    <MenuItem
+                        as={RouterLink}
+                        to="/viewpayments"
+                        data-cy="payments-menu-item"
+                    >
                         Payments
                     </MenuItem>
 
                     <MenuDivider />
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    <MenuItem onClick={handleLogout} data-cy="logout-menu-item">
+                        Logout
+                    </MenuItem>
                 </MenuList>
             </Menu>
-            <Button onClick={toggleColorMode} ml={4}>
+            <Button
+                onClick={toggleColorMode}
+                ml={4}
+                data-cy="color-mode-toggle"
+            >
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
         </Flex>
     ) : (
         <HStack spacing={4}>
             <ChakraLink href="/login">
-                <Button colorScheme="blue">
+                <Button colorScheme="blue" data-cy="login-button">
                     <Text>Log in</Text>
                 </Button>
             </ChakraLink>
             <ChakraLink href="/register">
-                <Button colorScheme="blue" variant="outline">
+                <Button
+                    colorScheme="blue"
+                    variant="outline"
+                    data-cy="signup-button"
+                >
                     <Text>Sign up</Text>
                 </Button>
             </ChakraLink>
-            <Button onClick={toggleColorMode} ml={4}>
+            <Button
+                onClick={toggleColorMode}
+                ml={4}
+                data-cy="color-mode-toggle"
+            >
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
         </HStack>

@@ -101,6 +101,7 @@ const RatingStars = ({ rating }) => {
 
 const FlashBanner = () => (
     <Box
+        data-cy="flash-banner"
         position="absolute"
         top={10}
         left={10}
@@ -150,7 +151,7 @@ const LoginRequiredModal = ({ isOpen, onClose }) => (
 
 export default function RentABikePage() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const isLoggedIn = false; // Replace with actual login check
+    const isLoggedIn = false;
 
     return (
         <Container maxW="container.lg" py={10}>

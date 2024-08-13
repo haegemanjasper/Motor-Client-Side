@@ -58,7 +58,12 @@ const CustomCarousel = () => {
     };
 
     return (
-        <Box width="100%" position="relative" overflow="hidden">
+        <Box
+            width="100%"
+            position="relative"
+            overflow="hidden"
+            data-cy="custom-carousel"
+        >
             <Carousel
                 showStatus={false}
                 infiniteLoop={true}

@@ -10,6 +10,7 @@ const ProfileHeader = ({ isEditing, onToggleEdit }) => (
             icon={isEditing ? <CheckIcon /> : <EditIcon />}
             onClick={onToggleEdit}
             aria-label={isEditing ? "Save changes" : "Edit profile"}
+            data-cy="edit-profile-button"
         />
     </Heading>
 );

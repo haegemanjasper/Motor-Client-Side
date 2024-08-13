@@ -22,13 +22,14 @@ const CreateLocationModal = ({
 }) => (
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-cy="create-location-modal">
             <ModalHeader>Create New Location</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 <FormControl isRequired>
                     <FormLabel>Name</FormLabel>
                     <Input
+                        data-cy="input-name"
                         value={newLocation.naam}
                         onChange={(e) =>
                             setNewLocation({
@@ -39,6 +40,7 @@ const CreateLocationModal = ({
                     />
                     <FormLabel>Street</FormLabel>
                     <Input
+                        data-cy="input-street"
                         value={newLocation.straat}
                         onChange={(e) =>
                             setNewLocation({
@@ -49,6 +51,7 @@ const CreateLocationModal = ({
                     />
                     <FormLabel>House Number</FormLabel>
                     <Input
+                        data-cy="input-house-number"
                         type="number"
                         value={newLocation.huisnummer}
                         onChange={(e) =>
@@ -60,6 +63,7 @@ const CreateLocationModal = ({
                     />
                     <FormLabel>Postal Code</FormLabel>
                     <Input
+                        data-cy="input-postal-code"
                         type="number"
                         value={newLocation.postcode}
                         onChange={(e) =>
@@ -71,6 +75,7 @@ const CreateLocationModal = ({
                     />
                     <FormLabel>City</FormLabel>
                     <Input
+                        data-cy="input-city"
                         value={newLocation.stad}
                         onChange={(e) =>
                             setNewLocation({
@@ -83,13 +88,16 @@ const CreateLocationModal = ({
             </ModalBody>
             <ModalFooter>
                 <Button
+                    data-cy="create-button"
                     colorScheme="blue"
                     mr={3}
                     onClick={handleCreateLocation}
                 >
                     Create
                 </Button>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button data-cy="cancel-button" onClick={onClose}>
+                    Cancel
+                </Button>
             </ModalFooter>
         </ModalContent>
     </Modal>
