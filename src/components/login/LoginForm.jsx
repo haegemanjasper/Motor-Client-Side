@@ -41,15 +41,15 @@ const LoginForm = () => {
             const loggedIn = await login(email, password);
 
             if (loggedIn) {
-                navigate({
-                    pathname: "/",
-                    replace: true,
-                });
+                setTimeout(() => {
+                    window.location.replace("/");
+                }, 100);
             } else {
                 setLoginError("Incorrect email or password.");
             }
+            setIsLoading(false);
         },
-        [login, navigate]
+        [login]
     );
 
     return (
