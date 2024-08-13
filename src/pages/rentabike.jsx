@@ -64,7 +64,7 @@ const settings = {
 
 export default function RentABikePage() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const isLoggedIn = false; // Change this as needed
+    const isLoggedIn = false;
 
     return (
         <Container maxW="container.lg" py={10}>
