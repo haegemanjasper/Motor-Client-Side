@@ -20,6 +20,8 @@ import Payments from "./pages/payments";
 import Locations from "./pages/locations";
 import ConfirmationPage from "./components/shop/confirmationpage";
 import { ShopContextProvider } from "./context/shop-context";
+import NotFound from "./components/loadingAndErrors/NotFound";
+import Forbidden from "./components/loadingAndErrors/Forbidden";
 import Root from "./root";
 
 const router = createBrowserRouter([
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
             { path: "/viewcustomers", element: <Customers /> },
             { path: "/viewpayments", element: <Payments /> },
             { path: "/viewlocations", element: <Locations /> },
+            { path: "*", element: <NotFound /> },
+            { path: "/forbidden", element: <Forbidden /> },
         ],
     },
 ]);
