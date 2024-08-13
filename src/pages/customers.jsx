@@ -26,6 +26,7 @@ import {
 import axios from "axios";
 import { useAuth } from "../context/auth-context";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
@@ -34,6 +35,7 @@ const Customers = () => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const { token } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -57,14 +59,20 @@ const Customers = () => {
                 }
             } catch (err) {
                 console.error("Error fetching customers:", err);
-                setError("Failed to fetch customers. Please try again later.");
+                if (err.response && err.response.status === 403) {
+                    navigate("/forbidden");
+                } else {
+                    setError(
+                        "Failed to fetch customers. Please try again later."
+                    );
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         fetchCustomers();
-    }, [token]);
+    }, [token, navigate]);
 
     const handleDeleteCustomer = async () => {
         if (!selectedCustomer) return;
@@ -78,13 +86,12 @@ const Customers = () => {
                     },
                 }
             );
-            // Filter out the deleted customer from the list
             setCustomers(
                 customers.filter(
                     (customer) => customer.id !== selectedCustomer.id
                 )
             );
-            onClose(); // Close the modal after successful deletion
+            onClose();
         } catch (err) {
             console.error("Error deleting customer:", err);
             setError("Failed to delete customer. Please try again later.");
@@ -130,7 +137,7 @@ const Customers = () => {
                             <Th>House Number</Th>
                             <Th>Postal Code</Th>
                             <Th>City</Th>
-                            <Th>Actions</Th> {/* New column for actions */}
+                            <Th>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -160,8 +167,6 @@ const Customers = () => {
             ) : (
                 <Text>No customers found</Text>
             )}
-
-            {/* Confirmation Modal */}
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>

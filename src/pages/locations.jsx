@@ -14,6 +14,7 @@ import { useAuth } from "../context/auth-context";
 import LocationTable from "../components/location/LocationTable";
 import CreateLocationModal from "../components/location/CreateLocationModal";
 import DeleteLocationModal from "../components/location/DeleteLocationModal";
+import { useNavigate } from "react-router-dom";
 
 const Locations = () => {
     const [locations, setLocations] = useState([]);
@@ -27,7 +28,7 @@ const Locations = () => {
         postcode: "",
         stad: "",
     });
-    const { token } = useAuth();
+    const { token, userRole } = useAuth(); // Assuming `userRole` is available
     const {
         isOpen: isCreateOpen,
         onOpen: onCreateOpen,
@@ -38,8 +39,15 @@ const Locations = () => {
         onOpen: onDeleteOpen,
         onClose: onDeleteClose,
     } = useDisclosure();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (userRole !== "admin") {
+            // Redirect to forbidden page if the user is not an admin
+            navigate("/forbidden");
+            return;
+        }
+
         const fetchLocations = async () => {
             try {
                 const response = await axios.get(
@@ -55,13 +63,20 @@ const Locations = () => {
                 }
             } catch (err) {
                 console.error("Error fetching locations:", err);
-                setError("Failed to fetch locations. Please try again later.");
+                if (err.response && err.response.status === 403) {
+                    navigate("/forbidden");
+                } else {
+                    setError(
+                        "Failed to fetch locations. Please try again later."
+                    );
+                }
             } finally {
                 setLoading(false);
             }
         };
+
         fetchLocations();
-    }, [token]);
+    }, [token, navigate, userRole]);
 
     const handleDeleteLocation = async () => {
         if (!selectedLocation) return;
