@@ -28,7 +28,7 @@ const Locations = () => {
         postcode: "",
         stad: "",
     });
-    const { token, userRole } = useAuth(); // Assuming `userRole` is available
+    const { token, isAdmin } = useAuth();
     const {
         isOpen: isCreateOpen,
         onOpen: onCreateOpen,
@@ -42,8 +42,7 @@ const Locations = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (userRole !== "admin") {
-            // Redirect to forbidden page if the user is not an admin
+        if (!isAdmin) {
             navigate("/forbidden");
             return;
         }
@@ -76,7 +75,7 @@ const Locations = () => {
         };
 
         fetchLocations();
-    }, [token, navigate, userRole]);
+    }, [token, navigate, isAdmin]);
 
     const handleDeleteLocation = async () => {
         if (!selectedLocation) return;
