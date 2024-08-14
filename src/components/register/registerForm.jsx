@@ -19,6 +19,7 @@ export default function RegisterForm() {
     const [errors, setErrors] = useState({});
     const toast = useToast();
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -37,16 +38,13 @@ export default function RegisterForm() {
             return;
         }
 
-        const response = await fetch(
-            "http://localhost:9000/api/klanten/register",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            }
-        );
+        const response = await fetch(`${API_URL}/klanten/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
 
         if (response.ok) {
             console.log("Registration successful");
