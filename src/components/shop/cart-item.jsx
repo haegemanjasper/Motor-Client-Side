@@ -6,7 +6,6 @@ import {
     Flex,
     Image,
     Text,
-    Heading,
     Box,
     IconButton,
     VStack,
@@ -26,22 +25,7 @@ export const CartItem = ({ itemId }) => {
     } = useContext(ShopContext);
 
     const motor = motors.find((motor) => motor.id === Number(itemId));
-    if (!motor) {
-        return (
-            <Box textAlign="center">
-                <Heading as="h2" size="lg" mb={4}>
-                    Your Shopping Cart is Empty.
-                </Heading>
-                <Button
-                    colorScheme="blue"
-                    size="lg"
-                    onClick={() => navigate("/shop")}
-                >
-                    Explore Shop
-                </Button>
-            </Box>
-        );
-    }
+    if (!motor) return <Text>Item not found</Text>;
 
     const { model, merk } = motor;
     const imageSrc = imageMap[merk] || motor.image;
