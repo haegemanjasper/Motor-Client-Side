@@ -8,8 +8,8 @@ export const ShopContextProvider = ({ children }) => {
     const [motors, setMotors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const { isAdmin } = useAuth();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchMotors = async () => {
@@ -22,14 +22,11 @@ export const ShopContextProvider = ({ children }) => {
             }
 
             try {
-                const response = await fetch(
-                    "http://localhost:9000/api/motoren",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${authToken}`,
-                        },
-                    }
-                );
+                const response = await fetch(`${API_URL}/motoren`, {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                });
 
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -112,15 +109,12 @@ export const ShopContextProvider = ({ children }) => {
 
         const authToken = localStorage.getItem("jwtToken");
         try {
-            const response = await fetch(
-                `http://localhost:9000/api/motoren/${id}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${authToken}`,
-                    },
-                }
-            );
+            const response = await fetch(`${API_URL}/motoren/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
 
             if (!response.ok) {
                 throw new Error("Failed to delete motor");
@@ -148,17 +142,14 @@ export const ShopContextProvider = ({ children }) => {
         }
 
         try {
-            const response = await fetch(
-                `http://localhost:9000/api/motoren/${id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authToken}`,
-                    },
-                    body: JSON.stringify(formattedData),
-                }
-            );
+            const response = await fetch(`${API_URL}/motoren/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(formattedData),
+            });
 
             if (!response.ok) {
                 throw new Error(
@@ -181,7 +172,7 @@ export const ShopContextProvider = ({ children }) => {
         const authToken = localStorage.getItem("jwtToken");
 
         try {
-            const response = await fetch("http://localhost:9000/api/motoren", {
+            const response = await fetch(`${API_URL}/motoren`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
