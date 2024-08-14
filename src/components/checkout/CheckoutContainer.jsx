@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CartSummary from "../../components/shop/cart-summary";
 import PaymentForm from "./PaymentForm";
 import { ShopContext } from "../../context/shop-context";
-import { validateForm } from "./CheckoutValidateForm"; // Import de validatiefuncties
+import { validateForm } from "./CheckoutValidateForm";
 
 const CheckoutContainer = () => {
     const navigate = useNavigate();
@@ -28,6 +28,7 @@ const CheckoutContainer = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [totalAmount, setTotalAmount] = useState(0);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -40,16 +41,13 @@ const CheckoutContainer = () => {
             }
 
             try {
-                const response = await fetch(
-                    "http://localhost:9000/api/huurlocaties",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${authToken}`,
-                        },
-                    }
-                );
+                const response = await fetch(`${API_URL}/huurlocaties`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                });
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -96,22 +94,19 @@ const CheckoutContainer = () => {
         }
 
         try {
-            const response = await fetch(
-                "http://localhost:9000/api/betalingen",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authToken}`,
-                    },
-                    body: JSON.stringify({
-                        bedrag: totalAmount,
-                        betaalmethode: formData.paymentMethod,
-                        datum: new Date().toISOString(),
-                        huurlocatieId: Number(formData.location),
-                    }),
-                }
-            );
+            const response = await fetch(`${API_URL}/api/betalingen`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({
+                    bedrag: totalAmount,
+                    betaalmethode: formData.paymentMethod,
+                    datum: new Date().toISOString(),
+                    huurlocatieId: Number(formData.location),
+                }),
+            });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
