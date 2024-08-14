@@ -3,8 +3,8 @@ import { Box, Heading, useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import { useAuth } from "../context/auth-context";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/payments/Loading";
-import Error from "../components/payments/Error";
+import Loading from "../components/loadingAndErrors/Loading";
+import Error from "../components/loadingAndErrors/Error";
 import CustomersTable from "../components/customer/CustomersTable";
 import ConfirmationModal from "../components/customer/ConfirmationModal";
 

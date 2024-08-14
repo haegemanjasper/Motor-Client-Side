@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Box, Heading, useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import { useAuth } from "../context/auth-context";
-import Loading from "../components/payments/Loading";
-import Error from "../components/payments/Error";
+import Loading from "../components/loadingAndErrors/Loading";
+import Error from "../components/loadingAndErrors/Error";
 import PaymentsTable from "../components/payments/PaymentsTable";
 import ConfirmationModal from "../components/payments/ConfirmationModal";
 
