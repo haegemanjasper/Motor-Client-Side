@@ -41,7 +41,7 @@ const Navbar = () => {
     console.log(
         "Navbar -> isAdmin passed to AuthControls:",
         userRole === "admin"
-    ); // Hier correct geplaatst
+    );
 
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 

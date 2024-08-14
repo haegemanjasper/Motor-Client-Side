@@ -12,7 +12,6 @@ const ConfirmationPage = () => {
             setEmail(storedEmail);
             sendConfirmationEmail(storedEmail);
         } else {
-            // Redirect to home if no email is found
             navigate("/");
         }
     }, [navigate]);

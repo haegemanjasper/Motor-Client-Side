@@ -25,7 +25,22 @@ export const CartItem = ({ itemId }) => {
     } = useContext(ShopContext);
 
     const motor = motors.find((motor) => motor.id === Number(itemId));
-    if (!motor) return <Text>Item not found</Text>;
+    if (!motor) {
+        return (
+            <Box textAlign="center">
+                <Heading as="h2" size="lg" mb={4}>
+                    Your Shopping Cart is Empty.
+                </Heading>
+                <Button
+                    colorScheme="blue"
+                    size="lg"
+                    onClick={() => navigate("/shop")}
+                >
+                    Explore Shop
+                </Button>
+            </Box>
+        );
+    }
 
     const { model, merk } = motor;
     const imageSrc = imageMap[merk] || motor.image;
@@ -57,7 +72,6 @@ export const CartItem = ({ itemId }) => {
             boxShadow="sm"
             spacing={{ base: 4, md: 6 }}
         >
-            {/* Motor Details */}
             <Flex
                 direction={{ base: "column", md: "row" }}
                 align="center"
