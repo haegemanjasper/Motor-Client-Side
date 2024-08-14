@@ -94,7 +94,7 @@ const CheckoutContainer = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL}/api/betalingen`, {
+            const response = await fetch(`${API_URL}/betalingen`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
