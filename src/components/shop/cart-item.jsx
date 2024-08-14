@@ -6,6 +6,7 @@ import {
     Flex,
     Image,
     Text,
+    Heading,
     Box,
     IconButton,
     VStack,
