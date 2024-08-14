@@ -16,6 +16,8 @@ import CreateLocationModal from "../components/location/CreateLocationModal";
 import DeleteLocationModal from "../components/location/DeleteLocationModal";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Locations = () => {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,12 +51,9 @@ const Locations = () => {
 
         const fetchLocations = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:9000/api/huurlocaties",
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }
-                );
+                const response = await axios.get(`${API_URL}/huurlocaties`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
                 if (response.data && Array.isArray(response.data.items)) {
                     setLocations(response.data.items);
                 } else {
@@ -81,7 +80,7 @@ const Locations = () => {
         if (!selectedLocation) return;
         try {
             await axios.delete(
-                `http://localhost:9000/api/huurlocaties/${selectedLocation.id}`,
+                `${API_URL}/huurlocaties/${selectedLocation.id}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -99,7 +98,7 @@ const Locations = () => {
     const handleCreateLocation = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:9000/api/huurlocaties",
+                `${API_URL}/huurlocaties`,
                 newLocation,
                 {
                     headers: { Authorization: `Bearer ${token}` },
