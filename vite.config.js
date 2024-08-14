@@ -5,6 +5,11 @@ export default defineConfig({
     base: "/",
     build: {
         outDir: "dist",
+        rollupOptions: {
+            input: {
+                main: "./src/main.jsx",
+            },
+        },
     },
     plugins: [react()],
 });
