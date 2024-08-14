@@ -14,18 +14,16 @@ const Payments = () => {
     const [selectedPayment, setSelectedPayment] = useState(null);
     const { token } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:9000/api/betalingen",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const response = await axios.get(`${API_URL}/betalingen`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
                 if (response.data && Array.isArray(response.data.items)) {
                     setPayments(response.data.items);
@@ -46,14 +44,11 @@ const Payments = () => {
         if (!selectedPayment) return;
 
         try {
-            await axios.delete(
-                `http://localhost:9000/api/betalingen/${selectedPayment.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await axios.delete(`${API_URL}/betalingen/${selectedPayment.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setPayments(
                 payments.filter((payment) => payment.id !== selectedPayment.id)
             );

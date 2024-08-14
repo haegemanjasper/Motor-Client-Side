@@ -15,6 +15,7 @@ const Customers = () => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const { token, isAdmin } = useAuth();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,14 +26,11 @@ const Customers = () => {
 
         const fetchCustomers = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:9000/api/klanten",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const response = await axios.get(`${API_URL}/klanten`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 console.log("API Response:", response.data);
 
                 if (response.data && Array.isArray(response.data.items)) {
@@ -61,14 +59,11 @@ const Customers = () => {
         if (!selectedCustomer) return;
 
         try {
-            await axios.delete(
-                `http://localhost:9000/api/klanten/${selectedCustomer.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await axios.delete(`${API_URL}/klanten/${selectedCustomer.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setCustomers(
                 customers.filter(
                     (customer) => customer.id !== selectedCustomer.id
