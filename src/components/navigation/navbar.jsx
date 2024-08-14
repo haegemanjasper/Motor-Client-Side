@@ -38,6 +38,11 @@ const Navbar = () => {
             ? klant.roles[0].toLowerCase()
             : "guest";
 
+    console.log(
+        "Navbar -> isAdmin passed to AuthControls:",
+        userRole === "admin"
+    ); // Hier correct geplaatst
+
     const filteredLinks = Links.filter((link) => link.roles.includes(userRole));
 
     const isOnShopPage = location.pathname === "/shop";
@@ -65,6 +70,7 @@ const Navbar = () => {
                         </Flex>
                         <AuthControls
                             isAuthed={isAuthed}
+                            isAdmin={userRole === "admin"}
                             logout={logout}
                             toggleColorMode={toggleColorMode}
                             userName={klant?.naam}
@@ -76,6 +82,7 @@ const Navbar = () => {
                                 <NavLinks filteredLinks={filteredLinks} />
                                 <AuthControls
                                     isAuthed={isAuthed}
+                                    isAdmin={userRole === "admin"}
                                     logout={logout}
                                     toggleColorMode={toggleColorMode}
                                     userName={klant?.naam}

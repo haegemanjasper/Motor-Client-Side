@@ -25,8 +25,13 @@ const AuthControls = ({
     const { colorMode } = useColorMode();
     const navigate = useNavigate();
 
+    console.log("AuthControls rendered - isAuthed:", isAuthed);
+    console.log("AuthControls rendered - isAdmin:", isAdmin);
+    console.log("AuthControls rendered - userName:", userName);
+
     const handleLogout = () => {
         logout();
+        console.log("User logged out");
         navigate("/");
     };
 
