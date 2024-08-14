@@ -1,10 +1,11 @@
 {
     "name": "2324-frontendweb-jasperhmn",
+    "version": "1.0.0",
+    "description": "A project for frontend web development with React and Vite.",
     "main": "src/index.js",
     "private": true,
-    "version": "1.0.0",
     "type": "module",
-    "license": "ARR",
+    "license": "MIT",
     "maintainers": [
         "HAEGEMAN Jasper / JasperHmm (jasper.haegeman@student.hogent.be)"
     ],
@@ -26,7 +27,6 @@
         "axios": "^1.7.2",
         "bootstrap": "^5.3.2",
         "framer-motion": "^11.2.10",
-        "mutation": "^0.0.1",
         "react": "^18.2.0",
         "react-bootstrap": "^2.9.0",
         "react-dom": "^18.2.0",
@@ -60,8 +60,5 @@
         "npm": ">=9.8.0",
         "node": ">=20.6.0",
         "yarn": ">=1.22.0"
-    },
-    "resolutions": {
-        "string-width": "4.2.3"
     }
 }
