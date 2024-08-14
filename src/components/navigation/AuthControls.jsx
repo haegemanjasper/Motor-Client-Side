@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useColorMode } from "@chakra-ui/react";
-import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const AuthControls = ({
@@ -74,20 +73,23 @@ const AuthControls = ({
         </Flex>
     ) : (
         <HStack spacing={4}>
-            <ChakraLink href="/login">
-                <Button colorScheme="blue" data-cy="login-button">
-                    <Text>Log in</Text>
-                </Button>
-            </ChakraLink>
-            <ChakraLink href="/register">
-                <Button
-                    colorScheme="blue"
-                    variant="outline"
-                    data-cy="signup-button"
-                >
-                    <Text>Sign up</Text>
-                </Button>
-            </ChakraLink>
+            <Button
+                as={RouterLink}
+                to="/login"
+                colorScheme="blue"
+                data-cy="login-button"
+            >
+                <Text>Log in</Text>
+            </Button>
+            <Button
+                as={RouterLink}
+                to="/register"
+                colorScheme="blue"
+                variant="outline"
+                data-cy="signup-button"
+            >
+                <Text>Sign up</Text>
+            </Button>
             <Button
                 onClick={toggleColorMode}
                 ml={4}
