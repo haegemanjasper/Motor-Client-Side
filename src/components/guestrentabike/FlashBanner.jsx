@@ -3,6 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 
 const FlashBanner = () => (
     <Box
+        data-cy="flash-banner"
         position="absolute"
         top={10}
         left={10}
