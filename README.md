@@ -4,25 +4,34 @@
 
 > Schrap hierboven wat niet past
 
-- Student: Haegeman Jasper
-- Studentennummer: 202292134
-- E-mailadres: <mailto:jasper.haegeman@student.hogent.be>
+-   Student: Haegeman Jasper
+-   Studentennummer: 202292134
+-   E-mailadres: <mailto:jasper.haegeman@student.hogent.be>
 
 ## Vereisten
 
 Ik verwacht dat volgende software reeds geïnstalleerd is:
 
-- [NodeJS](https://nodejs.org)
-- [Yarn](https://yarnpkg.com)
-- [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)
-- ...
-
-> Vul eventueel aan
+-   [NodeJS](https://nodejs.org)
+-   [Yarn](https://yarnpkg.com)
+-   [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)
+-   ...
 
 ## Opstarten
 
-> Schrijf hier hoe we de applicatie starten (.env bestanden aanmaken, commando's om uit te voeren...)
+Maak een `.env` bestand met volgende inhoud:
+
+```ini
+VITE_API_URL="http://localhost:9000/api"
+```
+
+Voer het commando uit om de dependencies te installeren:
+`yarn install`
+
+Voer het commando uit om de server te laten draaien:
+`yarn dev`
 
 ## Testen
 
-> Schrijf hier hoe we de testen uitvoeren (.env bestanden aanmaken, commando's om uit te voeren...)
+Dit opent de Cypress GUI waar je je tests kunt selecteren en uitvoeren:
+`yarn cypress open`
